@@ -98,4 +98,34 @@ class CalculatorTest {
         // Due to floating point precision, we need a tolerance
         assertEquals(0.3, result, 0.001)
     }
+    
+    @Test
+    fun invalid_number_format() {
+        // Test handling of invalid number formats
+        val invalidString = "15455723,63"
+        var result: Double? = null
+        var exception: Exception? = null
+        
+        try {
+            result = invalidString.toDouble()
+        } catch (e: NumberFormatException) {
+            exception = e
+        }
+        
+        // Should throw NumberFormatException for comma-separated decimals
+        assertNotNull("Should throw NumberFormatException", exception)
+        assertTrue("Should be NumberFormatException", exception is NumberFormatException)
+    }
+    
+    @Test
+    fun nan_and_infinity_handling() {
+        // Test NaN and infinity handling
+        val nan = Double.NaN
+        val infinity = Double.POSITIVE_INFINITY
+        
+        assertTrue("NaN should be detected", nan.isNaN())
+        assertTrue("Infinity should be detected", infinity.isInfinite())
+        assertFalse("NaN should not be infinite", nan.isInfinite())
+        assertFalse("Infinity should not be NaN", infinity.isNaN())
+    }
 }

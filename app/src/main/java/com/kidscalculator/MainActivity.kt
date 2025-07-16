@@ -109,45 +109,71 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 // Perform calculation with previous operator
                 onEqualsPressed()
             }
-            operand1 = currentInput.toDouble()
-            operator = op
-            isNewInput = true
+            try {
+                operand1 = currentInput.toDouble()
+                operator = op
+                isNewInput = true
+            } catch (e: NumberFormatException) {
+                // Handle invalid number format
+                currentInput = ""
+                updateDisplay("Error")
+                speakText(getString(R.string.tts_error))
+            }
         }
     }
     
     private fun onEqualsPressed() {
         if (currentInput.isNotEmpty() && operator.isNotEmpty()) {
-            val operand2 = currentInput.toDouble()
-            val result = when (operator) {
-                "+" -> operand1 + operand2
-                "-" -> operand1 - operand2
-                "*" -> operand1 * operand2
-                "/" -> {
-                    if (operand2 != 0.0) {
-                        operand1 / operand2
-                    } else {
-                        speakText(getString(R.string.tts_division_by_zero))
-                        return
+            try {
+                val operand2 = currentInput.toDouble()
+                val result = when (operator) {
+                    "+" -> operand1 + operand2
+                    "-" -> operand1 - operand2
+                    "*" -> operand1 * operand2
+                    "/" -> {
+                        if (operand2 != 0.0) {
+                            operand1 / operand2
+                        } else {
+                            speakText(getString(R.string.tts_division_by_zero))
+                            return
+                        }
                     }
+                    else -> operand2
                 }
-                else -> operand2
+                
+                // Check if result is valid
+                if (result.isNaN() || result.isInfinite()) {
+                    currentInput = ""
+                    updateDisplay("Error")
+                    speakText(getString(R.string.tts_error))
+                    operator = ""
+                    isNewInput = true
+                    return
+                }
+                
+                // Format result for display
+                val resultText = if (result == result.toInt().toDouble()) {
+                    result.toInt().toString()
+                } else {
+                    String.format("%.2f", result)
+                }
+                
+                currentInput = resultText
+                updateDisplay(currentInput)
+                
+                // Speak the result with Russian pronunciation
+                speakText(resultText)
+                
+                operator = ""
+                isNewInput = true
+            } catch (e: NumberFormatException) {
+                // Handle invalid number format
+                currentInput = ""
+                updateDisplay("Error")
+                speakText(getString(R.string.tts_error))
+                operator = ""
+                isNewInput = true
             }
-            
-            // Format result for display
-            val resultText = if (result == result.toInt().toDouble()) {
-                result.toInt().toString()
-            } else {
-                String.format("%.2f", result)
-            }
-            
-            currentInput = resultText
-            updateDisplay(currentInput)
-            
-            // Speak the result with Russian pronunciation
-            speakText(resultText)
-            
-            operator = ""
-            isNewInput = true
         }
     }
     
@@ -164,8 +190,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
     
     private fun speakText(text: String) {
-        if (::tts.isInitialized) {
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+        try {
+            if (::tts.isInitialized) {
+                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+            }
+        } catch (e: Exception) {
+            // Silently handle TTS errors - don't crash the app
         }
     }
     

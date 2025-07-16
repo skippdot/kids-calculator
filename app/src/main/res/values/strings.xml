@@ -17,4 +17,5 @@
     <string name="tts_equals">равно</string>
     <string name="tts_clear">очистить</string>
     <string name="tts_division_by_zero">нельзя делить на ноль</string>
+    <string name="tts_error">ошибка</string>
 </resources>
