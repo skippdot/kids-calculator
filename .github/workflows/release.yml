@@ -42,16 +42,13 @@ jobs:
       id: get_version
       run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
       
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
+    - name: Create Release with gh CLI
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Kids Calculator ${{ steps.get_version.outputs.VERSION }}
-        body: |
-          ## Kids Calculator ${{ steps.get_version.outputs.VERSION }}
+      run: |
+        gh release create ${{ steps.get_version.outputs.VERSION }} \
+          --title "Kids Calculator ${{ steps.get_version.outputs.VERSION }}" \
+          --notes "## Kids Calculator ${{ steps.get_version.outputs.VERSION }}
           
           ### 🎯 Features
           - Child-friendly calculator with large buttons
@@ -61,7 +58,7 @@ jobs:
           
           ### 📱 Installation
           1. Download the APK file below
-          2. Enable "Install from unknown sources" in your Android settings
+          2. Enable \"Install from unknown sources\" in your Android settings
           3. Install the APK file
           
           ### 🔧 Technical Details
@@ -73,26 +70,6 @@ jobs:
           - Russian language support for TTS
           - Improved user interface
           - Better error handling
-          - Unit tests coverage
-        draft: false
-        prerelease: false
-        
-    - name: Upload Debug APK
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: app/build/outputs/apk/debug/app-debug.apk
-        asset_name: kids-calculator-${{ steps.get_version.outputs.VERSION }}-debug.apk
-        asset_content_type: application/vnd.android.package-archive
-        
-    - name: Upload Release APK
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: app/build/outputs/apk/release/app-release-unsigned.apk
-        asset_name: kids-calculator-${{ steps.get_version.outputs.VERSION }}-release.apk
-        asset_content_type: application/vnd.android.package-archive
+          - Unit tests coverage" \
+          app/build/outputs/apk/debug/app-debug.apk#kids-calculator-${{ steps.get_version.outputs.VERSION }}-debug.apk \
+          app/build/outputs/apk/release/app-release-unsigned.apk#kids-calculator-${{ steps.get_version.outputs.VERSION }}-release.apk

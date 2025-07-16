@@ -11,8 +11,8 @@ android {
         applicationId "com.kidscalculator"
         minSdk 21
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode getVersionCode()
+        versionName getVersionName()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,4 +40,27 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+def getVersionName() {
+    def tag = System.getenv("GITHUB_REF")
+    if (tag != null && tag.startsWith("refs/tags/")) {
+        return tag.substring(10) // Remove "refs/tags/" prefix
+    }
+    return "1.0.0-dev"
+}
+
+def getVersionCode() {
+    def tag = System.getenv("GITHUB_REF")
+    if (tag != null && tag.startsWith("refs/tags/v")) {
+        def version = tag.substring(11) // Remove "refs/tags/v" prefix
+        def parts = version.split("\\.")
+        if (parts.length >= 3) {
+            def major = parts[0].toInteger()
+            def minor = parts[1].toInteger()
+            def patch = parts[2].toInteger()
+            return major * 10000 + minor * 100 + patch
+        }
+    }
+    return 1
 }
