@@ -1,14 +1,26 @@
 # Kids Calculator 🧮
 
+![Build Status](https://github.com/skippdot/kids-calculator/workflows/Android%20Build/badge.svg)
+
 A simple, child-friendly calculator app for Android designed specifically for 4-year-olds. The app features large buttons, colorful design, and text-to-speech functionality to help children learn numbers and basic math operations.
+
+## 📱 Download
+
+Get the latest version:
+
+- **Debug APK**: [Download from latest build](https://github.com/skippdot/kids-calculator/actions/workflows/android-build.yml) → Click on latest successful build → Download `debug-apk` artifact
+- **Release APK**: [Download from latest build](https://github.com/skippdot/kids-calculator/actions/workflows/android-build.yml) → Click on latest successful build → Download `release-apk` artifact
+
+> **Note**: You need to be logged into GitHub to download artifacts. Alternatively, you can build the app locally using the instructions below.
 
 ## Features
 
 - **Large, Touch-Friendly Buttons**: Easy for small fingers to press
-- **Text-to-Speech**: Speaks numbers and operations when buttons are pressed
+- **Russian Text-to-Speech**: Speaks numbers and operations in Russian language ("плюс", "минус", "умножить", "разделить")
 - **Kid-Friendly Design**: Bright colors and simple interface
 - **Basic Math Operations**: Addition, subtraction, multiplication, and division
 - **Voice Feedback**: Announces results and operations audibly
+- **Multilingual Support**: Primary support for Russian, with fallback to system language
 
 ## Technical Details
 
