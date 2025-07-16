@@ -6,12 +6,22 @@ A simple, child-friendly calculator app for Android designed specifically for 4-
 
 ## 📱 Download
 
-Get the latest version:
+### Latest Release
+🎉 **[Download the latest version](https://github.com/skippdot/kids-calculator/releases/latest)** 🎉
 
-- **Debug APK**: [Download from latest build](https://github.com/skippdot/kids-calculator/actions/workflows/android-build.yml) → Click on latest successful build → Download `debug-apk` artifact
-- **Release APK**: [Download from latest build](https://github.com/skippdot/kids-calculator/actions/workflows/android-build.yml) → Click on latest successful build → Download `release-apk` artifact
+Choose between:
+- **Debug APK** - For testing and development
+- **Release APK** - Optimized for production use
 
-> **Note**: You need to be logged into GitHub to download artifacts. Alternatively, you can build the app locally using the instructions below.
+### Development Builds
+For the bleeding-edge version, you can also:
+- Check [GitHub Actions](https://github.com/skippdot/kids-calculator/actions/workflows/android-build.yml) for recent builds
+- Build locally using the instructions below
+
+### Installation
+1. Download the APK file from the releases page
+2. Enable "Install from unknown sources" in your Android settings
+3. Install the APK file on your device
 
 ## Features
 
@@ -129,6 +139,23 @@ Run tests with:
 ```bash
 ./gradlew test
 ```
+
+### Creating a Release
+
+To create a new release with APK files:
+
+1. Create and push a version tag:
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+2. The GitHub Actions workflow will automatically:
+   - Build debug and release APK files
+   - Create a GitHub release
+   - Upload APK files to the release
+
+3. Users can then download the APK files from the [releases page](https://github.com/skippdot/kids-calculator/releases)
 
 ## Contributing
 

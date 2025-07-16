@@ -1,0 +1,98 @@
+name: Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0, v1.1.0, etc.
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build debug APK
+      run: ./gradlew assembleDebug
+      
+    - name: Build release APK
+      run: ./gradlew assembleRelease
+      
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Kids Calculator ${{ steps.get_version.outputs.VERSION }}
+        body: |
+          ## Kids Calculator ${{ steps.get_version.outputs.VERSION }}
+          
+          ### 🎯 Features
+          - Child-friendly calculator with large buttons
+          - Russian text-to-speech support
+          - Mathematical operations: addition, subtraction, multiplication, division
+          - Voice feedback for numbers and operations
+          
+          ### 📱 Installation
+          1. Download the APK file below
+          2. Enable "Install from unknown sources" in your Android settings
+          3. Install the APK file
+          
+          ### 🔧 Technical Details
+          - **Target Android Version**: API 34 (Android 14)
+          - **Minimum Android Version**: API 21 (Android 5.0)
+          - **Architecture**: Universal (ARM64, ARM32, x86_64, x86)
+          
+          ### 📋 What's New
+          - Russian language support for TTS
+          - Improved user interface
+          - Better error handling
+          - Unit tests coverage
+        draft: false
+        prerelease: false
+        
+    - name: Upload Debug APK
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: app/build/outputs/apk/debug/app-debug.apk
+        asset_name: kids-calculator-${{ steps.get_version.outputs.VERSION }}-debug.apk
+        asset_content_type: application/vnd.android.package-archive
+        
+    - name: Upload Release APK
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: app/build/outputs/apk/release/app-release-unsigned.apk
+        asset_name: kids-calculator-${{ steps.get_version.outputs.VERSION }}-release.apk
+        asset_content_type: application/vnd.android.package-archive
