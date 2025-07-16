@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kids Calculator</string>
+    <string name="display_default">0</string>
+    <string name="equals">=</string>
+    <string name="clear">C</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="multiply">×</string>
+    <string name="divide">÷</string>
+</resources>

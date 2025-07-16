@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Kids-friendly colors -->
+    <color name="kid_primary">#FF4CAF50</color>
+    <color name="kid_secondary">#FF2196F3</color>
+    <color name="kid_accent">#FFFF9800</color>
+    <color name="kid_background">#FFF5F5F5</color>
+    <color name="kid_surface">#FFFFFFFF</color>
+    <color name="kid_error">#FFF44336</color>
+    <color name="kid_on_primary">#FFFFFFFF</color>
+    <color name="kid_on_secondary">#FFFFFFFF</color>
+    <color name="kid_on_background">#FF212121</color>
+    <color name="kid_on_surface">#FF212121</color>
+    <color name="kid_on_error">#FFFFFFFF</color>
+    
+    <!-- Button colors -->
+    <color name="number_button">#FF2196F3</color>
+    <color name="operator_button">#FFFF9800</color>
+    <color name="equals_button">#FF4CAF50</color>
+    <color name="clear_button">#FFF44336</color>
+</resources>

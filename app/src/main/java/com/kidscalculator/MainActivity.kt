@@ -1,0 +1,174 @@
+package com.kidscalculator
+
+import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import java.util.*
+
+class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+    
+    private lateinit var display: TextView
+    private lateinit var tts: TextToSpeech
+    
+    private var currentInput = ""
+    private var operator = ""
+    private var operand1 = 0.0
+    private var isNewInput = true
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        
+        display = findViewById(R.id.display)
+        tts = TextToSpeech(this, this)
+        
+        setupButtons()
+    }
+    
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale.getDefault())
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                // Fallback to English if default language is not supported
+                tts.setLanguage(Locale.ENGLISH)
+            }
+            // Set speech rate slower for children
+            tts.setSpeechRate(0.8f)
+        }
+    }
+    
+    private fun setupButtons() {
+        // Number buttons
+        val numberButtons = arrayOf(
+            R.id.btn_0, R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4,
+            R.id.btn_5, R.id.btn_6, R.id.btn_7, R.id.btn_8, R.id.btn_9
+        )
+        
+        numberButtons.forEachIndexed { index, buttonId ->
+            findViewById<Button>(buttonId).setOnClickListener {
+                val number = if (buttonId == R.id.btn_0) "0" else index.toString()
+                onNumberPressed(number)
+                speakText(number)
+            }
+        }
+        
+        // Operator buttons
+        findViewById<Button>(R.id.btn_plus).setOnClickListener {
+            onOperatorPressed("+")
+            speakText("plus")
+        }
+        
+        findViewById<Button>(R.id.btn_minus).setOnClickListener {
+            onOperatorPressed("-")
+            speakText("minus")
+        }
+        
+        findViewById<Button>(R.id.btn_multiply).setOnClickListener {
+            onOperatorPressed("*")
+            speakText("times")
+        }
+        
+        findViewById<Button>(R.id.btn_divide).setOnClickListener {
+            onOperatorPressed("/")
+            speakText("divided by")
+        }
+        
+        // Equals button
+        findViewById<Button>(R.id.btn_equals).setOnClickListener {
+            onEqualsPressed()
+            speakText("equals")
+        }
+        
+        // Clear button
+        findViewById<Button>(R.id.btn_clear).setOnClickListener {
+            onClearPressed()
+            speakText("clear")
+        }
+    }
+    
+    private fun onNumberPressed(number: String) {
+        if (isNewInput) {
+            currentInput = number
+            isNewInput = false
+        } else {
+            currentInput += number
+        }
+        updateDisplay(currentInput)
+    }
+    
+    private fun onOperatorPressed(op: String) {
+        if (currentInput.isNotEmpty()) {
+            if (operator.isNotEmpty()) {
+                // Perform calculation with previous operator
+                onEqualsPressed()
+            }
+            operand1 = currentInput.toDouble()
+            operator = op
+            isNewInput = true
+        }
+    }
+    
+    private fun onEqualsPressed() {
+        if (currentInput.isNotEmpty() && operator.isNotEmpty()) {
+            val operand2 = currentInput.toDouble()
+            val result = when (operator) {
+                "+" -> operand1 + operand2
+                "-" -> operand1 - operand2
+                "*" -> operand1 * operand2
+                "/" -> {
+                    if (operand2 != 0.0) {
+                        operand1 / operand2
+                    } else {
+                        speakText("Cannot divide by zero")
+                        return
+                    }
+                }
+                else -> operand2
+            }
+            
+            // Format result for display
+            val resultText = if (result == result.toInt().toDouble()) {
+                result.toInt().toString()
+            } else {
+                String.format("%.2f", result)
+            }
+            
+            currentInput = resultText
+            updateDisplay(currentInput)
+            
+            // Speak the result
+            speakText(resultText)
+            
+            operator = ""
+            isNewInput = true
+        }
+    }
+    
+    private fun onClearPressed() {
+        currentInput = ""
+        operator = ""
+        operand1 = 0.0
+        isNewInput = true
+        updateDisplay("0")
+    }
+    
+    private fun updateDisplay(text: String) {
+        display.text = if (text.isEmpty()) "0" else text
+    }
+    
+    private fun speakText(text: String) {
+        if (::tts.isInitialized) {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+        }
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::tts.isInitialized) {
+            tts.stop()
+            tts.shutdown()
+        }
+    }
+}
