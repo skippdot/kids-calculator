@@ -46,6 +46,12 @@ jobs:
       id: get_version
       run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
       
+    - name: Check APK files
+      run: |
+        echo "Checking APK files..."
+        ls -la app/build/outputs/apk/debug/
+        ls -la app/build/outputs/apk/release/
+        
     - name: Create Release with gh CLI
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -71,9 +77,9 @@ jobs:
           - **Architecture**: Universal (ARM64, ARM32, x86_64, x86)
           
           ### 📋 What's New
-          - Russian language support for TTS
-          - Improved user interface
-          - Better error handling
-          - Unit tests coverage" \
+          - Fixed NumberFormatException crash with comma decimal input
+          - Fixed release APK installation issues
+          - Added Russian error messages
+          - Improved error handling for TTS operations" \
           app/build/outputs/apk/debug/app-debug.apk#kids-calculator-${{ steps.get_version.outputs.VERSION }}-debug.apk \
-          app/build/outputs/apk/release/app-release-unsigned.apk#kids-calculator-${{ steps.get_version.outputs.VERSION }}-release.apk
+          app/build/outputs/apk/release/app-release.apk#kids-calculator-${{ steps.get_version.outputs.VERSION }}-release.apk
