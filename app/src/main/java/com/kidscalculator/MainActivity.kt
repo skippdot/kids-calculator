@@ -83,7 +83,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // Equals button
         findViewById<Button>(R.id.btn_equals).setOnClickListener {
             onEqualsPressed()
-            speakText(getString(R.string.tts_equals))
         }
         
         // Clear button
@@ -161,8 +160,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 currentInput = resultText
                 updateDisplay(currentInput)
                 
-                // Speak the result with Russian pronunciation
-                speakText(resultText)
+                // Speak "equals [result]" in Russian
+                speakText("${getString(R.string.tts_equals)} $resultText")
                 
                 operator = ""
                 isNewInput = true
