@@ -29,10 +29,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            val result = tts.setLanguage(Locale.getDefault())
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                // Fallback to English if default language is not supported
-                tts.setLanguage(Locale.ENGLISH)
+            // Try to set Russian language first for child-friendly experience
+            val russianResult = tts.setLanguage(Locale("ru", "RU"))
+            if (russianResult == TextToSpeech.LANG_MISSING_DATA || russianResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                // Fallback to default language
+                val defaultResult = tts.setLanguage(Locale.getDefault())
+                if (defaultResult == TextToSpeech.LANG_MISSING_DATA || defaultResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    // Final fallback to English
+                    tts.setLanguage(Locale.ENGLISH)
+                }
             }
             // Set speech rate slower for children
             tts.setSpeechRate(0.8f)
@@ -57,34 +62,34 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // Operator buttons
         findViewById<Button>(R.id.btn_plus).setOnClickListener {
             onOperatorPressed("+")
-            speakText("plus")
+            speakText(getString(R.string.tts_plus))
         }
         
         findViewById<Button>(R.id.btn_minus).setOnClickListener {
             onOperatorPressed("-")
-            speakText("minus")
+            speakText(getString(R.string.tts_minus))
         }
         
         findViewById<Button>(R.id.btn_multiply).setOnClickListener {
             onOperatorPressed("*")
-            speakText("times")
+            speakText(getString(R.string.tts_multiply))
         }
         
         findViewById<Button>(R.id.btn_divide).setOnClickListener {
             onOperatorPressed("/")
-            speakText("divided by")
+            speakText(getString(R.string.tts_divide))
         }
         
         // Equals button
         findViewById<Button>(R.id.btn_equals).setOnClickListener {
             onEqualsPressed()
-            speakText("equals")
+            speakText(getString(R.string.tts_equals))
         }
         
         // Clear button
         findViewById<Button>(R.id.btn_clear).setOnClickListener {
             onClearPressed()
-            speakText("clear")
+            speakText(getString(R.string.tts_clear))
         }
     }
     
@@ -121,7 +126,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     if (operand2 != 0.0) {
                         operand1 / operand2
                     } else {
-                        speakText("Cannot divide by zero")
+                        speakText(getString(R.string.tts_division_by_zero))
                         return
                     }
                 }
@@ -138,7 +143,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             currentInput = resultText
             updateDisplay(currentInput)
             
-            // Speak the result
+            // Speak the result with Russian pronunciation
             speakText(resultText)
             
             operator = ""

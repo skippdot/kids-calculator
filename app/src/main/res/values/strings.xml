@@ -8,4 +8,13 @@
     <string name="minus">-</string>
     <string name="multiply">×</string>
     <string name="divide">÷</string>
+    
+    <!-- Russian TTS strings -->
+    <string name="tts_plus">плюс</string>
+    <string name="tts_minus">минус</string>
+    <string name="tts_multiply">умножить</string>
+    <string name="tts_divide">разделить</string>
+    <string name="tts_equals">равно</string>
+    <string name="tts_clear">очистить</string>
+    <string name="tts_division_by_zero">нельзя делить на ноль</string>
 </resources>
