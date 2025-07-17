@@ -1,4 +1,4 @@
-package com.kidscalculator
+package com.kidscalculator.app
 
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -127,8 +127,29 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
     
     private fun parseNumber(input: String): Double {
-        // Replace comma with dot for parsing
-        val normalizedInput = input.replace(",", ".")
+        if (input.isEmpty()) {
+            throw NumberFormatException("Empty input")
+        }
+        
+        // Replace comma with dot for parsing and handle multiple decimal separators
+        var normalizedInput = input.replace(",", ".")
+        
+        // Remove any extra decimal points (keep only the first one)
+        val firstDotIndex = normalizedInput.indexOf('.')
+        if (firstDotIndex != -1) {
+            val beforeDot = normalizedInput.substring(0, firstDotIndex)
+            val afterDot = normalizedInput.substring(firstDotIndex + 1).replace(".", "")
+            normalizedInput = "$beforeDot.$afterDot"
+        }
+        
+        // Handle cases where input starts or ends with decimal point
+        if (normalizedInput.startsWith(".")) {
+            normalizedInput = "0$normalizedInput"
+        }
+        if (normalizedInput.endsWith(".")) {
+            normalizedInput += "0"
+        }
+        
         return normalizedInput.toDouble()
     }
     

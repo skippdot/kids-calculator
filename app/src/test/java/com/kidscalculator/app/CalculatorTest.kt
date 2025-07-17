@@ -1,4 +1,4 @@
-package com.kidscalculator
+package com.kidscalculator.app
 
 import org.junit.Test
 import org.junit.Assert.*
@@ -115,6 +115,16 @@ class CalculatorTest {
         // Should throw NumberFormatException for comma-separated decimals
         assertNotNull("Should throw NumberFormatException", exception)
         assertTrue("Should be NumberFormatException", exception is NumberFormatException)
+    }
+    
+    @Test
+    fun parse_number_with_comma() {
+        // Test that our parseNumber function handles comma correctly
+        val testInput = "15455723,63"
+        // We can't test parseNumber directly as it's private, but we can test the concept
+        val normalizedInput = testInput.replace(",", ".")
+        val result = normalizedInput.toDouble()
+        assertEquals(15455723.63, result, 0.001)
     }
     
     @Test

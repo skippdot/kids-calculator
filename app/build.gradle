@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.kidscalculator'
+    namespace 'com.kidscalculator.app'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.kidscalculator"
+        applicationId "com.kidscalculator.app"
         minSdk 21
         targetSdk 34
         versionCode getVersionCode()
