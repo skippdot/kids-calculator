@@ -91,6 +91,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             speakText(getString(R.string.tts_clear))
         }
         
+        // Decimal point button
+        findViewById<Button>(R.id.btn_decimal).setOnClickListener {
+            onDecimalPressed()
+        }
+        
         // Help button
         findViewById<Button>(R.id.btn_help).setOnClickListener {
             speakText(getString(R.string.tts_help))
@@ -107,6 +112,26 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         updateDisplay(currentInput)
     }
     
+    private fun onDecimalPressed() {
+        if (isNewInput) {
+            currentInput = "0."
+            isNewInput = false
+        } else {
+            // Only add decimal point if there isn't one already
+            if (!currentInput.contains(".") && !currentInput.contains(",")) {
+                currentInput += "."
+            }
+        }
+        updateDisplay(currentInput)
+        speakText("точка")
+    }
+    
+    private fun parseNumber(input: String): Double {
+        // Replace comma with dot for parsing
+        val normalizedInput = input.replace(",", ".")
+        return normalizedInput.toDouble()
+    }
+    
     private fun onOperatorPressed(op: String) {
         if (currentInput.isNotEmpty()) {
             if (operator.isNotEmpty()) {
@@ -114,7 +139,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 onEqualsPressed()
             }
             try {
-                operand1 = currentInput.toDouble()
+                operand1 = parseNumber(currentInput)
                 operator = op
                 isNewInput = true
             } catch (e: NumberFormatException) {
@@ -129,7 +154,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun onEqualsPressed() {
         if (currentInput.isNotEmpty() && operator.isNotEmpty()) {
             try {
-                val operand2 = currentInput.toDouble()
+                val operand2 = parseNumber(currentInput)
                 val result = when (operator) {
                     "+" -> operand1 + operand2
                     "-" -> operand1 - operand2

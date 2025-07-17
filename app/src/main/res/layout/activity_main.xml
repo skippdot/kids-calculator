@@ -235,7 +235,7 @@
             android:textStyle="bold"
             android:layout_margin="4dp" />
 
-        <!-- Row 5: Number 0 (spans 2 columns) and help button -->
+        <!-- Row 5: Number 0 and decimal point -->
         <Button
             android:id="@+id/btn_0"
             android:layout_width="0dp"
@@ -251,18 +251,33 @@
             android:layout_margin="4dp" />
 
         <Button
-            android:id="@+id/btn_help"
+            android:id="@+id/btn_decimal"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
             android:layout_rowWeight="1"
-            android:backgroundTint="@color/kid_tertiary"
-            android:text="?"
-            android:textColor="@color/kid_on_tertiary"
+            android:backgroundTint="@color/number_button"
+            android:text="."
+            android:textColor="@color/kid_on_primary"
             android:textSize="32sp"
             android:textStyle="bold"
             android:layout_margin="4dp" />
 
     </GridLayout>
+
+    <!-- Help button in corner -->
+    <Button
+        android:id="@+id/btn_help"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/kid_tertiary"
+        android:text="?"
+        android:textColor="@color/kid_on_tertiary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:elevation="8dp" />
 
 </LinearLayout>
