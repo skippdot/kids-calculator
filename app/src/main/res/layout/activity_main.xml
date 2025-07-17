@@ -235,17 +235,30 @@
             android:textStyle="bold"
             android:layout_margin="4dp" />
 
-        <!-- Row 5: Number 0 (spans 2 columns) -->
+        <!-- Row 5: Number 0 (spans 2 columns) and help button -->
         <Button
             android:id="@+id/btn_0"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_columnSpan="3"
+            android:layout_columnSpan="2"
             android:layout_columnWeight="1"
             android:layout_rowWeight="1"
             android:backgroundTint="@color/number_button"
             android:text="0"
             android:textColor="@color/kid_on_primary"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:layout_margin="4dp" />
+
+        <Button
+            android:id="@+id/btn_help"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:backgroundTint="@color/kid_tertiary"
+            android:text="?"
+            android:textColor="@color/kid_on_tertiary"
             android:textSize="32sp"
             android:textStyle="bold"
             android:layout_margin="4dp" />

@@ -90,6 +90,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             onClearPressed()
             speakText(getString(R.string.tts_clear))
         }
+        
+        // Help button
+        findViewById<Button>(R.id.btn_help).setOnClickListener {
+            speakText(getString(R.string.tts_help))
+        }
     }
     
     private fun onNumberPressed(number: String) {
