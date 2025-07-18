@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     companion object {
         private const val PREFS_NAME = "KidsCalculatorPrefs"
         private const val KEY_USER_NAME = "user_name"
+        private const val MAX_INPUT_LENGTH = 10 // Maximum digits for child-friendly use
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +53,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
             // Set speech rate slower for children
             tts.setSpeechRate(0.8f)
+        } else {
+            // TTS failed to initialize - app will still work without voice feedback
+            // Could add visual feedback here if needed
         }
     }
     
@@ -64,7 +68,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         
         numberButtons.forEachIndexed { index, buttonId ->
             findViewById<Button>(buttonId).setOnClickListener {
-                val number = if (buttonId == R.id.btn_0) "0" else index.toString()
+                val number = when (buttonId) {
+                    R.id.btn_0 -> "0"
+                    R.id.btn_1 -> "1"
+                    R.id.btn_2 -> "2"
+                    R.id.btn_3 -> "3"
+                    R.id.btn_4 -> "4"
+                    R.id.btn_5 -> "5"
+                    R.id.btn_6 -> "6"
+                    R.id.btn_7 -> "7"
+                    R.id.btn_8 -> "8"
+                    R.id.btn_9 -> "9"
+                    else -> index.toString()
+                }
                 onNumberPressed(number)
                 speakText(number)
             }
@@ -123,7 +139,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             currentInput = number
             isNewInput = false
         } else {
-            currentInput += number
+            // Prevent input that's too long for children to handle
+            if (currentInput.length < MAX_INPUT_LENGTH) {
+                currentInput += number
+            } else {
+                // Give feedback that input is too long
+                speakText(getString(R.string.tts_number_too_long))
+                return
+            }
         }
         updateDisplay(currentInput)
     }
@@ -133,6 +156,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             currentInput = "0."
             isNewInput = false
         } else {
+            // Check input length limit
+            if (currentInput.length >= MAX_INPUT_LENGTH) {
+                speakText(getString(R.string.tts_number_too_long))
+                return
+            }
             // Only add decimal point if there isn't one already
             if (!currentInput.contains(".") && !currentInput.contains(",")) {
                 currentInput += "."
@@ -145,6 +173,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun parseNumber(input: String): Double {
         if (input.isEmpty()) {
             throw NumberFormatException("Empty input")
+        }
+        
+        // Validate input length to prevent overflow issues
+        if (input.length > MAX_INPUT_LENGTH + 2) { // +2 for decimal point and sign
+            throw NumberFormatException("Input too long")
         }
         
         // Replace comma with dot for parsing and handle multiple decimal separators
@@ -200,6 +233,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         if (operand2 != 0.0) {
                             operand1 / operand2
                         } else {
+                            // Reset calculator state on division by zero
+                            currentInput = ""
+                            operator = ""
+                            operand1 = 0.0
+                            isNewInput = true
+                            updateDisplay("Error")
                             speakText(getString(R.string.tts_division_by_zero))
                             return
                         }
