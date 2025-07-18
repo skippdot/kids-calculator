@@ -255,7 +255,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val isLionKing = themeManager.isLionKingTheme()
         
         // Update main layout background
-        val mainLayout = findViewById<android.widget.LinearLayout>(android.R.id.content).getChildAt(0) as android.widget.LinearLayout
+        val mainLayout = findViewById<android.widget.LinearLayout>(R.id.main_layout)
         mainLayout.setBackgroundColor(getColor(
             if (isLionKing) R.color.lion_king_background else R.color.kid_background
         ))

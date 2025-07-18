@@ -40,6 +40,18 @@ class MainActivityTest {
     }
     
     @Test
+    fun activity_should_not_crash_on_theme_application() {
+        // This test should verify that applyCurrentTheme doesn't crash
+        // Currently it will fail due to ClassCastException
+        val controller = Robolectric.buildActivity(MainActivity::class.java)
+        
+        // The create() call triggers onCreate which calls applyCurrentTheme
+        // This should not throw any exception
+        val activity = controller.create().get()
+        assertNotNull("Activity should be created without crashing", activity)
+    }
+    
+    @Test
     fun number_button_should_update_display() {
         val btn5 = activity.findViewById<Button>(R.id.btn_5)
         btn5.performClick()
