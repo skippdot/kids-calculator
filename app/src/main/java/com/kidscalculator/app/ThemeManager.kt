@@ -1,0 +1,57 @@
+package com.kidscalculator.app
+
+import android.content.Context
+import android.content.SharedPreferences
+
+/**
+ * Manages theme switching and persistence for the Kids Calculator app
+ */
+class ThemeManager(context: Context) {
+    
+    private val sharedPreferences: SharedPreferences = 
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    
+    companion object {
+        private const val PREFS_NAME = "KidsCalculatorPrefs"
+        private const val KEY_THEME = "selected_theme"
+        const val THEME_DEFAULT = "default"
+        const val THEME_LION_KING = "lion_king"
+    }
+    
+    /**
+     * Get the currently selected theme
+     */
+    fun getCurrentTheme(): String {
+        return sharedPreferences.getString(KEY_THEME, THEME_DEFAULT) ?: THEME_DEFAULT
+    }
+    
+    /**
+     * Set the current theme and persist it
+     */
+    fun setTheme(theme: String) {
+        sharedPreferences.edit()
+            .putString(KEY_THEME, theme)
+            .apply()
+    }
+    
+    /**
+     * Toggle between default and Lion King themes
+     */
+    fun toggleTheme(): String {
+        val currentTheme = getCurrentTheme()
+        val newTheme = if (currentTheme == THEME_DEFAULT) {
+            THEME_LION_KING
+        } else {
+            THEME_DEFAULT
+        }
+        setTheme(newTheme)
+        return newTheme
+    }
+    
+    /**
+     * Check if Lion King theme is currently active
+     */
+    fun isLionKingTheme(): Boolean {
+        return getCurrentTheme() == THEME_LION_KING
+    }
+}

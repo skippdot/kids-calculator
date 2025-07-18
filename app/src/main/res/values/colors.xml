@@ -30,4 +30,35 @@
     <!-- Help button colors -->
     <color name="kid_tertiary">#FF9C27B0</color>
     <color name="kid_on_tertiary">#FFFFFFFF</color>
+    
+    <!-- Lion King Theme Colors -->
+    <!-- Sandy beige backgrounds -->
+    <color name="lion_king_background">#FFF5E6D3</color>
+    <color name="lion_king_surface">#FFE6D7B9</color>
+    
+    <!-- Sunset orange buttons -->
+    <color name="lion_king_primary">#FFFF8C42</color>
+    <color name="lion_king_secondary">#FFD2691E</color>
+    
+    <!-- Savannah green accents -->
+    <color name="lion_king_accent">#FF8FBC8F</color>
+    <color name="lion_king_tertiary">#FF6B8E23</color>
+    
+    <!-- Warm browns and golds -->
+    <color name="lion_king_warm_brown">#FF8B4513</color>
+    <color name="lion_king_gold">#FFFFD700</color>
+    
+    <!-- Text colors for Lion King theme -->
+    <color name="lion_king_on_primary">#FFFFFFFF</color>
+    <color name="lion_king_on_secondary">#FFFFFFFF</color>
+    <color name="lion_king_on_background">#FF3E2723</color>
+    <color name="lion_king_on_surface">#FF3E2723</color>
+    <color name="lion_king_on_error">#FFFFFFFF</color>
+    <color name="lion_king_on_tertiary">#FFFFFFFF</color>
+    
+    <!-- Lion King button specific colors -->
+    <color name="lion_king_number_button">#FFFF8C42</color>
+    <color name="lion_king_operator_button">#FFD2691E</color>
+    <color name="lion_king_equals_button">#FF8FBC8F</color>
+    <color name="lion_king_clear_button">#FFA0522D</color>
 </resources>
