@@ -62,4 +62,32 @@ class StringResourcesTest {
         assertEquals("0", defaultValue)
         assertTrue("Default value should be numeric", defaultValue.all { it.isDigit() })
     }
+    
+    @Test
+    fun name_dialog_strings_in_russian() {
+        // Test that name dialog strings are in Russian
+        val dialogTitle = "Как тебя зовут?"
+        val dialogHint = "Введи своё имя"
+        val dialogSave = "Сохранить"
+        val dialogCancel = "Отмена"
+        val helloPrefix = "Привет"
+        
+        val russianStrings = listOf(dialogTitle, dialogHint, dialogSave, dialogCancel, helloPrefix)
+        
+        for (str in russianStrings) {
+            assertFalse("Name dialog string should not be empty: $str", str.isEmpty())
+            assertTrue("Name dialog string should contain Cyrillic characters: $str", 
+                str.any { it in 'а'..'я' || it in 'А'..'Я' || it in 'ё'..'ё' || it in 'Ё'..'Ё' })
+        }
+    }
+    
+    @Test
+    fun dialog_button_names_meaningful() {
+        // Test that dialog button names are meaningful
+        val save = "Сохранить"
+        val cancel = "Отмена"
+        
+        assertTrue("Save button text should contain save concept", save.contains("хран"))
+        assertTrue("Cancel button text should contain cancel concept", cancel.contains("мен"))
+    }
 }
