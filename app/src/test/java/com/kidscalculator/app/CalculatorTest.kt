@@ -168,7 +168,7 @@ class CalculatorTest {
         calculator.onEqualsPressed()
         
         // Should not crash - clear state
-        assertEquals("", calculator.currentInput)
+        assertEquals("0", calculator.currentInput)
     }
     
     @Test
@@ -239,7 +239,7 @@ class CalculatorTest {
         
         calculator.onClearPressed()
         
-        assertEquals("", calculator.currentInput)
+        assertEquals("0", calculator.currentInput)
         assertEquals("", calculator.operator)
         assertEquals(0.0, calculator.operand1, 0.001)
         assertTrue(calculator.isNewInput)
@@ -321,7 +321,7 @@ class CalculatorTest {
         calculator.onOperatorPressed("+")
         
         // Should handle the error gracefully
-        assertEquals("", calculator.currentInput)
+        assertEquals("0", calculator.currentInput)
     }
     
     @Test
@@ -334,7 +334,7 @@ class CalculatorTest {
         calculator.onEqualsPressed()
         
         // Should handle the error gracefully
-        assertEquals("", calculator.currentInput)
+        assertEquals("0", calculator.currentInput)
         assertEquals("", calculator.operator)
         assertTrue(calculator.isNewInput)
     }
@@ -350,7 +350,7 @@ class CalculatorTest {
         calculator.onEqualsPressed()
         
         // Should handle NaN result
-        assertEquals("", calculator.currentInput)
+        assertEquals("0", calculator.currentInput)
         assertEquals("", calculator.operator)
         assertTrue(calculator.isNewInput)
     }

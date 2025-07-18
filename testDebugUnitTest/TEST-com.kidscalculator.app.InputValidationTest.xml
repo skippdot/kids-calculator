@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.kidscalculator.app.InputValidationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2025-07-18T10:47:31" hostname="pkrvmq0rgcvqdmg" time="0.003">
+  <properties/>
+  <testcase name="decimal_point_handling_with_length" classname="com.kidscalculator.app.InputValidationTest" time="0.001"/>
+  <testcase name="division_by_zero_state_reset" classname="com.kidscalculator.app.InputValidationTest" time="0.0"/>
+  <testcase name="button_mapping_correctness" classname="com.kidscalculator.app.InputValidationTest" time="0.001"/>
+  <testcase name="zero_input_handling" classname="com.kidscalculator.app.InputValidationTest" time="0.0"/>
+  <testcase name="large_number_handling" classname="com.kidscalculator.app.InputValidationTest" time="0.001"/>
+  <testcase name="input_length_boundary_testing" classname="com.kidscalculator.app.InputValidationTest" time="0.0"/>
+  <testcase name="error_message_validation" classname="com.kidscalculator.app.InputValidationTest" time="0.0"/>
+  <testcase name="number_parsing_with_length_validation" classname="com.kidscalculator.app.InputValidationTest" time="0.0"/>
+  <testcase name="max_input_length_constant" classname="com.kidscalculator.app.InputValidationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

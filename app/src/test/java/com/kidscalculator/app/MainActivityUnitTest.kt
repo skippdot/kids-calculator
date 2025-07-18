@@ -15,7 +15,7 @@ class MainActivityUnitTest {
     
     @Test
     fun testCalculatorInitialization() {
-        assertEquals("", calculator.currentInput)
+        assertEquals("0", calculator.currentInput)
         assertEquals("", calculator.operator)
         assertEquals(0.0, calculator.operand1, 0.001)
         assertTrue(calculator.isNewInput)
@@ -36,7 +36,7 @@ class MainActivityUnitTest {
         calculator.onNumberPressed("3")
         calculator.onClearPressed()
         
-        assertEquals("", calculator.currentInput)
+        assertEquals("0", calculator.currentInput)
         assertEquals("", calculator.operator)
         assertEquals(0.0, calculator.operand1, 0.001)
         assertTrue(calculator.isNewInput)
@@ -89,8 +89,8 @@ class MainActivityUnitTest {
         calculator.onNumberPressed("0")
         calculator.onEqualsPressed()
         
-        // After division by zero, calculator clears
-        assertEquals("", calculator.currentInput)
+        // After division by zero, calculator clears to 0
+        assertEquals("0", calculator.currentInput)
     }
     
     @Test

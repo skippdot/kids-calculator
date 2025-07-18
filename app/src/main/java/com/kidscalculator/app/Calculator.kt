@@ -5,7 +5,7 @@ package com.kidscalculator.app
  */
 class Calculator {
     
-    var currentInput = ""
+    var currentInput = "0"
     var operator = ""
     var operand1 = 0.0
     var isNewInput = true
@@ -113,7 +113,7 @@ class Calculator {
     }
     
     private fun clear() {
-        currentInput = ""
+        currentInput = "0"
         operator = ""
         operand1 = 0.0
         isNewInput = true

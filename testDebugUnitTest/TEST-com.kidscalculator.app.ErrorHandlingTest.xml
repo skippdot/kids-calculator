@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.kidscalculator.app.ErrorHandlingTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2025-07-18T10:47:31" hostname="pkrvmq0rgcvqdmg" time="0.012">
+  <properties/>
+  <testcase name="tts_initialization_failure_handling" classname="com.kidscalculator.app.ErrorHandlingTest" time="0.0"/>
+  <testcase name="decimal_normalization" classname="com.kidscalculator.app.ErrorHandlingTest" time="0.008"/>
+  <testcase name="russian_text_validation" classname="com.kidscalculator.app.ErrorHandlingTest" time="0.001"/>
+  <testcase name="consecutive_operations" classname="com.kidscalculator.app.ErrorHandlingTest" time="0.0"/>
+  <testcase name="calculator_state_consistency" classname="com.kidscalculator.app.ErrorHandlingTest" time="0.0"/>
+  <testcase name="display_formatting_edge_cases" classname="com.kidscalculator.app.ErrorHandlingTest" time="0.001"/>
+  <testcase name="operator_precedence_simulation" classname="com.kidscalculator.app.ErrorHandlingTest" time="0.0"/>
+  <testcase name="number_format_exception_handling" classname="com.kidscalculator.app.ErrorHandlingTest" time="0.0"/>
+  <testcase name="infinity_and_nan_detection" classname="com.kidscalculator.app.ErrorHandlingTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

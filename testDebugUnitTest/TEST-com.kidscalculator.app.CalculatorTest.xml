@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.kidscalculator.app.CalculatorTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2025-07-18T10:47:31" hostname="pkrvmq0rgcvqdmg" time="0.03">
+  <properties/>
+  <testcase name="parseNumber_with_empty_string_should_throw_exception" classname="com.kidscalculator.app.CalculatorTest" time="0.012"/>
+  <testcase name="calculator_division_flow" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_decimal_input_new_input" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_decimal_input_append" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="parseNumber_with_invalid_characters_should_throw_exception" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_addition_flow" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_decimal_input_already_has_comma" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="parseNumber_with_dot_should_work" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_nan_and_infinity_handling" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_subtraction_flow" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="parseNumber_with_complex_comma_case" classname="com.kidscalculator.app.CalculatorTest" time="0.007"/>
+  <testcase name="calculator_number_input_append" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_error_handling_invalid_number_format" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_clear_resets_state" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_multiplication_flow" classname="com.kidscalculator.app.CalculatorTest" time="0.001"/>
+  <testcase name="calculator_division_by_zero_should_be_handled" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_error_handling_invalid_equals" classname="com.kidscalculator.app.CalculatorTest" time="0.001"/>
+  <testcase name="parseNumber_with_comma_should_work" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="parseNumber_with_trailing_dot_should_work" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="parseNumber_with_leading_dot_should_work" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="parseNumber_with_multiple_dots_should_keep_first" classname="com.kidscalculator.app.CalculatorTest" time="0.001"/>
+  <testcase name="calculator_decimal_input_already_has_decimal" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_decimal_formatting_decimal_result" classname="com.kidscalculator.app.CalculatorTest" time="0.002"/>
+  <testcase name="calculator_decimal_formatting_integer_result" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_chained_operations" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <testcase name="calculator_number_input_new_input" classname="com.kidscalculator.app.CalculatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[java.lang.instrument.IllegalClassFormatException: Error while instrumenting com/kidscalculator/app/Calculator with JaCoCo 0.8.9.202303310957/c0ad781.
+	at org.jacoco.agent.rt.internal_4481564.CoverageTransformer.transform(CoverageTransformer.java:94)
+	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:244)
+	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:541)
+	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
+	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1017)
+	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:150)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:862)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassOnClassPathOrNull(BuiltinClassLoader.java:760)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:681)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:639)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.getDeclaredFields0(Native Method)
+	at java.base/java.lang.Class.privateGetDeclaredFields(Class.java:3297)
+	at java.base/java.lang.Class.getDeclaredFields(Class.java:2371)
+	at org.junit.runners.model.TestClass.getSortedDeclaredFields(TestClass.java:77)
+	at org.junit.runners.model.TestClass.scanAnnotatedMembers(TestClass.java:70)
+	at org.junit.runners.model.TestClass.<init>(TestClass.java:57)
+	at org.junit.runners.JUnit4.<init>(JUnit4.java:23)
+	at org.junit.internal.builders.JUnit4Builder.runnerForClass(JUnit4Builder.java:10)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:70)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:37)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:70)
+	at org.junit.internal.requests.ClassRequest.createRunner(ClassRequest.java:28)
+	at org.junit.internal.requests.MemoizingRequest.getRunner(MemoizingRequest.java:19)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:77)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy2/jdk.proxy2.$Proxy5.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+Caused by: java.io.IOException: Error while instrumenting com/kidscalculator/app/Calculator with JaCoCo 0.8.9.202303310957/c0ad781.
+	at org.jacoco.agent.rt.internal_4481564.core.instr.Instrumenter.instrumentError(Instrumenter.java:161)
+	at org.jacoco.agent.rt.internal_4481564.core.instr.Instrumenter.instrument(Instrumenter.java:111)
+	at org.jacoco.agent.rt.internal_4481564.CoverageTransformer.transform(CoverageTransformer.java:92)
+	... 48 more
+Caused by: java.lang.IllegalStateException: Cannot process instrumented class com/kidscalculator/app/Calculator. Please supply original non-instrumented classes.
+	at org.jacoco.agent.rt.internal_4481564.core.internal.instr.InstrSupport.assertNotInstrumented(InstrSupport.java:238)
+	at org.jacoco.agent.rt.internal_4481564.core.internal.instr.ClassInstrumenter.visitField(ClassInstrumenter.java:56)
+	at org.jacoco.agent.rt.internal_4481564.asm.ClassVisitor.visitField(ClassVisitor.java:356)
+	at org.jacoco.agent.rt.internal_4481564.asm.ClassReader.readField(ClassReader.java:1137)
+	at org.jacoco.agent.rt.internal_4481564.asm.ClassReader.accept(ClassReader.java:739)
+	at org.jacoco.agent.rt.internal_4481564.asm.ClassReader.accept(ClassReader.java:424)
+	at org.jacoco.agent.rt.internal_4481564.core.instr.Instrumenter.instrument(Instrumenter.java:91)
+	at org.jacoco.agent.rt.internal_4481564.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+	... 49 more
+]]></system-err>
+</testsuite>
