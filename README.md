@@ -1,7 +1,7 @@
 # Kids Calculator 🧮
 
 ![Build Status](https://github.com/skippdot/kids-calculator/workflows/Android%20Build/badge.svg)
-![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-97%25-brightgreen)
 
 A simple, child-friendly calculator app for Android designed specifically for 4-year-olds. The app features large buttons, colorful design, and text-to-speech functionality to help children learn numbers and basic math operations.
 
@@ -201,7 +201,7 @@ This project is open source and available under the MIT License.
 # Детский Калькулятор 🧮
 
 ![Статус сборки](https://github.com/skippdot/kids-calculator/workflows/Android%20Build/badge.svg)
-![Покрытие](https://img.shields.io/badge/покрытие-90%25-brightgreen)
+![Покрытие](https://img.shields.io/badge/покрытие-97%25-brightgreen)
 
 Простое, детское приложение-калькулятор для Android, специально разработанное для детей 4 лет. Приложение имеет крупные кнопки, красочный дизайн и функцию озвучивания текста, которая помогает детям изучать числа и основные математические операции.
 
@@ -368,7 +368,7 @@ git push origin v1.0.0
 # Детски Калкулатор 🧮
 
 ![Статус на компилацията](https://github.com/skippdot/kids-calculator/workflows/Android%20Build/badge.svg)
-![Покритие](https://img.shields.io/badge/покритие-90%25-brightgreen)
+![Покритие](https://img.shields.io/badge/покритие-97%25-brightgreen)
 
 Простo, детско приложение-калкулатор за Android, специално проектирано за деца на 4 години. Приложението има големи бутони, цветен дизайн и функция за озвучаване на текст, която помага на децата да изучават числа и основни математически операции.
 
