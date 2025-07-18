@@ -99,14 +99,32 @@ dependencies {
 }
 
 def getVersionName() {
+    // First check for GitHub Actions tag
     def tag = System.getenv("GITHUB_REF")
     if (tag != null && tag.startsWith("refs/tags/")) {
         return tag.substring(10) // Remove "refs/tags/" prefix
     }
-    return "1.0.0-dev"
+    
+    // For local builds, get the latest git tag
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags', '--abbrev=0'
+            standardOutput = stdout
+        }
+        def latestTag = stdout.toString().trim()
+        if (latestTag && latestTag.startsWith("v")) {
+            return latestTag
+        }
+    } catch (Exception e) {
+        // Git command failed, use default
+    }
+    
+    return "v1.0.10"
 }
 
 def getVersionCode() {
+    // First check for GitHub Actions tag
     def tag = System.getenv("GITHUB_REF")
     if (tag != null && tag.startsWith("refs/tags/v")) {
         def version = tag.substring(11) // Remove "refs/tags/v" prefix
@@ -118,5 +136,28 @@ def getVersionCode() {
             return major * 10000 + minor * 100 + patch
         }
     }
-    return 1
+    
+    // For local builds, get the latest git tag
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags', '--abbrev=0'
+            standardOutput = stdout
+        }
+        def latestTag = stdout.toString().trim()
+        if (latestTag && latestTag.startsWith("v")) {
+            def version = latestTag.substring(1) // Remove "v" prefix
+            def parts = version.split("\\.")
+            if (parts.length >= 3) {
+                def major = parts[0].toInteger()
+                def minor = parts[1].toInteger()
+                def patch = parts[2].toInteger()
+                return major * 10000 + minor * 100 + patch
+            }
+        }
+    } catch (Exception e) {
+        // Git command failed, use default
+    }
+    
+    return 10010 // 1.0.10
 }

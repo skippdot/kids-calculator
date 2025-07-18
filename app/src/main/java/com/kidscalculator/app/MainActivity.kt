@@ -194,7 +194,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             speakText(getString(R.string.tts_help))
             showNameDialog()
         } else {
-            speakText("${getString(R.string.tts_hello_prefix)} $savedName")
+            val versionInfo = try {
+                val version = packageManager.getPackageInfo(packageName, 0).versionName
+                "Version $version"
+            } catch (e: Exception) {
+                ""
+            }
+            speakText("${getString(R.string.tts_hello_prefix)} $savedName. $versionInfo")
         }
     }
     
@@ -212,8 +218,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             editText.setText(savedName)
         }
         
+        val versionInfo = try {
+            "Version ${packageManager.getPackageInfo(packageName, 0).versionName}"
+        } catch (e: Exception) {
+            ""
+        }
+        
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.dialog_name_title))
+            .setMessage(versionInfo)
             .setView(editText)
             .setPositiveButton(getString(R.string.dialog_name_save)) { _, _ ->
                 val name = editText.text.toString().trim()
