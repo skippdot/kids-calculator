@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.kidscalculator.StringResourcesTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-07-18T11:17:56" hostname="pkrvmq0rgcvqdmg" time="0.227">
+  <properties/>
+  <testcase name="dialog_button_names_meaningful" classname="com.kidscalculator.StringResourcesTest" time="0.054"/>
+  <testcase name="division_by_zero_message_in_russian" classname="com.kidscalculator.StringResourcesTest" time="0.0"/>
+  <testcase name="default_display_value" classname="com.kidscalculator.StringResourcesTest" time="0.0"/>
+  <testcase name="math_operations_symbols_correct" classname="com.kidscalculator.StringResourcesTest" time="0.0"/>
+  <testcase name="russian_tts_strings_not_empty" classname="com.kidscalculator.StringResourcesTest" time="0.169"/>
+  <testcase name="app_name_not_empty" classname="com.kidscalculator.StringResourcesTest" time="0.0"/>
+  <testcase name="name_dialog_strings_in_russian" classname="com.kidscalculator.StringResourcesTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

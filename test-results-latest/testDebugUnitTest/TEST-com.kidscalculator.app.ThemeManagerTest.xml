@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.kidscalculator.app.ThemeManagerTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-07-18T11:17:56" hostname="pkrvmq0rgcvqdmg" time="0.001">
+  <properties/>
+  <testcase name="theme_names_are_different" classname="com.kidscalculator.app.ThemeManagerTest" time="0.0"/>
+  <testcase name="is_lion_king_theme_check_true" classname="com.kidscalculator.app.ThemeManagerTest" time="0.0"/>
+  <testcase name="theme_names_are_not_empty" classname="com.kidscalculator.app.ThemeManagerTest" time="0.0"/>
+  <testcase name="theme_toggle_logic_from_default" classname="com.kidscalculator.app.ThemeManagerTest" time="0.0"/>
+  <testcase name="theme_constants_are_correct" classname="com.kidscalculator.app.ThemeManagerTest" time="0.001"/>
+  <testcase name="is_lion_king_theme_check_false" classname="com.kidscalculator.app.ThemeManagerTest" time="0.0"/>
+  <testcase name="theme_toggle_logic_from_lion_king" classname="com.kidscalculator.app.ThemeManagerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

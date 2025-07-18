@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.kidscalculator.app.NameStorageTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-07-18T11:17:56" hostname="pkrvmq0rgcvqdmg" time="0.004">
+  <properties/>
+  <testcase name="name_validation_empty_string" classname="com.kidscalculator.app.NameStorageTest" time="0.001"/>
+  <testcase name="name_validation_valid_name" classname="com.kidscalculator.app.NameStorageTest" time="0.002"/>
+  <testcase name="name_validation_whitespace_only" classname="com.kidscalculator.app.NameStorageTest" time="0.0"/>
+  <testcase name="name_greeting_construction" classname="com.kidscalculator.app.NameStorageTest" time="0.0"/>
+  <testcase name="name_special_characters" classname="com.kidscalculator.app.NameStorageTest" time="0.0"/>
+  <testcase name="name_null_handling" classname="com.kidscalculator.app.NameStorageTest" time="0.001"/>
+  <testcase name="name_numbers_and_letters" classname="com.kidscalculator.app.NameStorageTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
