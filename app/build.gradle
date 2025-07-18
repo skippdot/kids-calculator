@@ -5,28 +5,28 @@ plugins {
 }
 
 android {
-    namespace 'com.kidscalculator.app'
-    compileSdk 34
+    namespace = 'com.kidscalculator.app'
+    compileSdk = 34
 
     defaultConfig {
-        applicationId "com.kidscalculator.app"
-        minSdk 21
-        targetSdk 34
-        versionCode getVersionCode()
-        versionName getVersionName()
+        applicationId = "com.kidscalculator.app"
+        minSdk = 21
+        targetSdk = 34
+        versionCode = getVersionCode()
+        versionName = getVersionName()
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {
-            testCoverageEnabled true
+            testCoverageEnabled = true
         }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
             // Use debug signing for now to avoid installation issues
-            signingConfig signingConfigs.debug
+            signingConfig = signingConfigs.debug
         }
     }
     compileOptions {
@@ -42,34 +42,39 @@ android {
             includeAndroidResources = true
             returnDefaultValues = true
         }
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+                excludes = ['jdk.internal.*']
+            }
+        }
     }
 }
 
+
 jacoco {
-    toolVersion = "0.8.12"
+    toolVersion = "0.8.8"
 }
 
-tasks.register('jacocoTestReport', JacocoReport) {
-    dependsOn 'testDebugUnitTest'
-    
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
     reports {
         xml.required = true
         html.required = true
-        csv.required = false
     }
-    
+
     def fileFilter = [
         '**/R.class',
         '**/R$*.class',
         '**/BuildConfig.*',
         '**/Manifest*.*',
         '**/*Test*.*',
-        'android/**/*.*'
+        'android/**/*.*',
+        '**/data/models/**'
     ]
-    
+
     def debugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
     def mainSrc = "${project.projectDir}/src/main/java"
-    
+
     sourceDirectories.setFrom(files([mainSrc]))
     classDirectories.setFrom(files([debugTree]))
     executionData.setFrom(fileTree(dir: buildDir, includes: ['**/*.exec', '**/*.ec']))
@@ -81,6 +86,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.10.3'
+    testImplementation 'androidx.test:core:1.5.0'
+    testImplementation 'androidx.test.ext:junit:1.1.5'
+    testImplementation 'org.mockito:mockito-core:5.7.0'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }

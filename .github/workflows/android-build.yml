@@ -98,3 +98,24 @@ jobs:
         path: app/build/test-results/test*/*.xml
         reporter: java-junit
         fail-on-empty: true
+        
+    - name: Generate coverage report
+      run: ./gradlew testDebugUnitTest --tests "*CalculatorTest*" jacocoTestReport
+      
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      if: success() || failure()
+      with:
+        name: coverage-report
+        path: |
+          app/build/reports/kover/html/
+          app/build/reports/kover/report.xml
+        retention-days: 30
+        
+    - name: Coverage comment
+      uses: MishaKav/pytest-coverage-comment@main
+      if: github.event_name == 'pull_request'
+      with:
+        coverage-data-path: app/build/reports/kover/report.xml
+        title: Code Coverage Report
+        badge-title: Coverage

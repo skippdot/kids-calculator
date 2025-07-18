@@ -2,140 +2,356 @@ package com.kidscalculator.app
 
 import org.junit.Test
 import org.junit.Assert.*
+import org.junit.Before
+import org.mockito.Mockito.*
 
 /**
- * Unit tests for calculator logic
+ * Unit tests for calculator business logic
+ * Tests the core calculator methods
  */
 class CalculatorTest {
     
+    private lateinit var calculator: Calculator
+    
+    @Before
+    fun setup() {
+        calculator = Calculator()
+    }
+    
+    // Test parseNumber method directly
     @Test
-    fun addition_isCorrect() {
-        // Test basic addition
-        val result = 2.0 + 2.0
-        assertEquals(4.0, result, 0.001)
+    fun parseNumber_with_dot_should_work() {
+        val result = calculator.parseNumber("12.34")
+        assertEquals(12.34, result, 0.001)
     }
     
     @Test
-    fun subtraction_isCorrect() {
-        // Test basic subtraction
-        val result = 5.0 - 3.0
-        assertEquals(2.0, result, 0.001)
+    fun parseNumber_with_comma_should_work() {
+        val result = calculator.parseNumber("12,34")
+        assertEquals(12.34, result, 0.001)
     }
     
     @Test
-    fun multiplication_isCorrect() {
-        // Test basic multiplication
-        val result = 3.0 * 4.0
-        assertEquals(12.0, result, 0.001)
+    fun parseNumber_with_leading_dot_should_work() {
+        val result = calculator.parseNumber(".5")
+        assertEquals(0.5, result, 0.001)
     }
     
     @Test
-    fun division_isCorrect() {
-        // Test basic division
-        val result = 10.0 / 2.0
+    fun parseNumber_with_trailing_dot_should_work() {
+        val result = calculator.parseNumber("5.")
         assertEquals(5.0, result, 0.001)
     }
     
     @Test
-    fun division_by_zero_handled() {
-        // Test division by zero
-        val operand1 = 10.0
-        val operand2 = 0.0
-        
-        // Division by zero should return infinity
-        val result = operand1 / operand2
-        assertTrue("Division by zero should return infinity", result.isInfinite())
+    fun parseNumber_with_multiple_dots_should_keep_first() {
+        val result = calculator.parseNumber("12.34.56")
+        assertEquals(12.3456, result, 0.001)
     }
     
     @Test
-    fun result_formatting_integer() {
-        // Test that integer results are formatted correctly
-        val result = 4.0
-        val formatted = if (result == result.toInt().toDouble()) {
-            result.toInt().toString()
-        } else {
-            String.format("%.2f", result)
-        }
-        assertEquals("4", formatted)
-    }
-    
-    @Test
-    fun result_formatting_decimal() {
-        // Test that decimal results are formatted correctly
-        val result = 4.5
-        val formatted = if (result == result.toInt().toDouble()) {
-            result.toInt().toString()
-        } else {
-            String.format("%.2f", result)
-        }
-        assertEquals("4.50", formatted)
-    }
-    
-    @Test
-    fun multiple_operations() {
-        // Test multiple operations: 2 + 3 * 4 = 14 (if calculated left to right)
-        // This simulates the calculator's left-to-right evaluation
-        var result = 2.0
-        result += 3.0  // 5.0
-        result *= 4.0  // 20.0
-        assertEquals(20.0, result, 0.001)
-    }
-    
-    @Test
-    fun negative_numbers() {
-        // Test operations with negative numbers
-        val result1 = -5.0 + 3.0
-        assertEquals(-2.0, result1, 0.001)
-        
-        val result2 = -4.0 * -2.0
-        assertEquals(8.0, result2, 0.001)
-    }
-    
-    @Test
-    fun decimal_precision() {
-        // Test decimal precision
-        val result = 0.1 + 0.2
-        // Due to floating point precision, we need a tolerance
-        assertEquals(0.3, result, 0.001)
-    }
-    
-    @Test
-    fun invalid_number_format() {
-        // Test handling of invalid number formats
-        val invalidString = "15455723,63"
-        var result: Double? = null
-        var exception: Exception? = null
-        
+    fun parseNumber_with_empty_string_should_throw_exception() {
         try {
-            result = invalidString.toDouble()
+            calculator.parseNumber("")
+            fail("Should have thrown NumberFormatException")
         } catch (e: NumberFormatException) {
-            exception = e
+            // Expected
         }
-        
-        // Should throw NumberFormatException for comma-separated decimals
-        assertNotNull("Should throw NumberFormatException", exception)
-        assertTrue("Should be NumberFormatException", exception is NumberFormatException)
     }
     
     @Test
-    fun parse_number_with_comma() {
-        // Test that our parseNumber function handles comma correctly
-        val testInput = "15455723,63"
-        // We can't test parseNumber directly as it's private, but we can test the concept
-        val normalizedInput = testInput.replace(",", ".")
-        val result = normalizedInput.toDouble()
+    fun parseNumber_with_invalid_characters_should_throw_exception() {
+        try {
+            calculator.parseNumber("12a34")
+            fail("Should have thrown NumberFormatException")
+        } catch (e: NumberFormatException) {
+            // Expected
+        }
+    }
+    
+    @Test
+    fun parseNumber_with_complex_comma_case() {
+        // Test the specific case that was crashing: "15455723,63"
+        val result = calculator.parseNumber("15455723,63")
         assertEquals(15455723.63, result, 0.001)
     }
     
+    // Test calculator logic flows
     @Test
-    fun nan_and_infinity_handling() {
-        // Test NaN and infinity handling
-        val nan = Double.NaN
-        val infinity = Double.POSITIVE_INFINITY
+    fun calculator_addition_flow() {
+        // Simulate: enter 2, press +, enter 3, press =
+        calculator.currentInput = "2"
+        calculator.operator = ""
+        calculator.operand1 = 0.0
+        calculator.isNewInput = true
         
-        assertTrue("NaN should be detected", nan.isNaN())
-        assertTrue("Infinity should be detected", infinity.isInfinite())
-        assertFalse("NaN should not be infinite", nan.isInfinite())
-        assertFalse("Infinity should not be NaN", infinity.isNaN())
+        // Simulate operator button press
+        calculator.onOperatorPressed("+")
+        
+        // Verify operand1 was set correctly
+        assertEquals(2.0, calculator.operand1, 0.001)
+        assertEquals("+", calculator.operator)
+        assertTrue(calculator.isNewInput)
+        
+        // Simulate entering second number
+        calculator.currentInput = "3"
+        calculator.isNewInput = false
+        
+        // Simulate equals button press
+        calculator.onEqualsPressed()
+        
+        // Verify result
+        assertEquals("5", calculator.currentInput)
+        assertTrue(calculator.isNewInput)
+        assertEquals("", calculator.operator)
+    }
+    
+    @Test
+    fun calculator_subtraction_flow() {
+        calculator.currentInput = "10"
+        calculator.operator = ""
+        calculator.operand1 = 0.0
+        calculator.isNewInput = true
+        
+        calculator.onOperatorPressed("-")
+        calculator.currentInput = "3"
+        calculator.isNewInput = false
+        
+        calculator.onEqualsPressed()
+        
+        assertEquals("7", calculator.currentInput)
+    }
+    
+    @Test
+    fun calculator_multiplication_flow() {
+        calculator.currentInput = "4"
+        calculator.operator = ""
+        calculator.operand1 = 0.0
+        calculator.isNewInput = true
+        
+        calculator.onOperatorPressed("*")
+        calculator.currentInput = "3"
+        calculator.isNewInput = false
+        
+        calculator.onEqualsPressed()
+        
+        assertEquals("12", calculator.currentInput)
+    }
+    
+    @Test
+    fun calculator_division_flow() {
+        calculator.currentInput = "10"
+        calculator.operator = ""
+        calculator.operand1 = 0.0
+        calculator.isNewInput = true
+        
+        calculator.onOperatorPressed("/")
+        calculator.currentInput = "2"
+        calculator.isNewInput = false
+        
+        calculator.onEqualsPressed()
+        
+        assertEquals("5", calculator.currentInput)
+    }
+    
+    @Test
+    fun calculator_division_by_zero_should_be_handled() {
+        calculator.currentInput = "10"
+        calculator.operator = ""
+        calculator.operand1 = 0.0
+        calculator.isNewInput = true
+        
+        calculator.onOperatorPressed("/")
+        calculator.currentInput = "0"
+        calculator.isNewInput = false
+        
+        calculator.onEqualsPressed()
+        
+        // Should not crash - clear state
+        assertEquals("", calculator.currentInput)
+    }
+    
+    @Test
+    fun calculator_decimal_formatting_integer_result() {
+        calculator.currentInput = "4"
+        calculator.operator = ""
+        calculator.operand1 = 0.0
+        calculator.isNewInput = true
+        
+        calculator.onOperatorPressed("+")
+        calculator.currentInput = "1"
+        calculator.isNewInput = false
+        
+        calculator.onEqualsPressed()
+        
+        // Should format as integer, not decimal
+        assertEquals("5", calculator.currentInput)
+    }
+    
+    @Test
+    fun calculator_decimal_formatting_decimal_result() {
+        calculator.currentInput = "5"
+        calculator.operator = ""
+        calculator.operand1 = 0.0
+        calculator.isNewInput = true
+        
+        calculator.onOperatorPressed("/")
+        calculator.currentInput = "2"
+        calculator.isNewInput = false
+        
+        calculator.onEqualsPressed()
+        
+        // Should format as decimal
+        assertEquals("2.50", calculator.currentInput)
+    }
+    
+    @Test
+    fun calculator_chained_operations() {
+        // Test: 2 + 3 * 4 = 20 (left to right evaluation)
+        calculator.currentInput = "2"
+        calculator.operator = ""
+        calculator.operand1 = 0.0
+        calculator.isNewInput = true
+        
+        calculator.onOperatorPressed("+")
+        calculator.currentInput = "3"
+        calculator.isNewInput = false
+        
+        // When we press another operator, it should calculate 2+3=5 first
+        calculator.onOperatorPressed("*")
+        assertEquals("5", calculator.currentInput)
+        assertEquals(5.0, calculator.operand1, 0.001)
+        assertEquals("*", calculator.operator)
+        
+        calculator.currentInput = "4"
+        calculator.isNewInput = false
+        
+        calculator.onEqualsPressed()
+        assertEquals("20", calculator.currentInput)
+    }
+    
+    @Test
+    fun calculator_clear_resets_state() {
+        calculator.currentInput = "123"
+        calculator.operator = "+"
+        calculator.operand1 = 456.0
+        calculator.isNewInput = false
+        
+        calculator.onClearPressed()
+        
+        assertEquals("", calculator.currentInput)
+        assertEquals("", calculator.operator)
+        assertEquals(0.0, calculator.operand1, 0.001)
+        assertTrue(calculator.isNewInput)
+    }
+    
+    @Test
+    fun calculator_number_input_new_input() {
+        calculator.currentInput = "previous"
+        calculator.isNewInput = true
+        
+        calculator.onNumberPressed("5")
+        
+        assertEquals("5", calculator.currentInput)
+        assertFalse(calculator.isNewInput)
+    }
+    
+    @Test
+    fun calculator_number_input_append() {
+        calculator.currentInput = "12"
+        calculator.isNewInput = false
+        
+        calculator.onNumberPressed("3")
+        
+        assertEquals("123", calculator.currentInput)
+        assertFalse(calculator.isNewInput)
+    }
+    
+    @Test
+    fun calculator_decimal_input_new_input() {
+        calculator.currentInput = "previous"
+        calculator.isNewInput = true
+        
+        calculator.onDecimalPressed()
+        
+        assertEquals("0.", calculator.currentInput)
+        assertFalse(calculator.isNewInput)
+    }
+    
+    @Test
+    fun calculator_decimal_input_append() {
+        calculator.currentInput = "12"
+        calculator.isNewInput = false
+        
+        calculator.onDecimalPressed()
+        
+        assertEquals("12.", calculator.currentInput)
+        assertFalse(calculator.isNewInput)
+    }
+    
+    @Test
+    fun calculator_decimal_input_already_has_decimal() {
+        calculator.currentInput = "12.34"
+        calculator.isNewInput = false
+        
+        calculator.onDecimalPressed()
+        
+        // Should not add another decimal point
+        assertEquals("12.34", calculator.currentInput)
+    }
+    
+    @Test
+    fun calculator_decimal_input_already_has_comma() {
+        calculator.currentInput = "12,34"
+        calculator.isNewInput = false
+        
+        calculator.onDecimalPressed()
+        
+        // Should not add decimal point if comma already exists
+        assertEquals("12,34", calculator.currentInput)
+    }
+    
+    @Test
+    fun calculator_error_handling_invalid_number_format() {
+        calculator.currentInput = "invalid"
+        calculator.operator = ""
+        calculator.operand1 = 0.0
+        calculator.isNewInput = true
+        
+        calculator.onOperatorPressed("+")
+        
+        // Should handle the error gracefully
+        assertEquals("", calculator.currentInput)
+    }
+    
+    @Test
+    fun calculator_error_handling_invalid_equals() {
+        calculator.currentInput = "invalid"
+        calculator.operator = "+"
+        calculator.operand1 = 5.0
+        calculator.isNewInput = false
+        
+        calculator.onEqualsPressed()
+        
+        // Should handle the error gracefully
+        assertEquals("", calculator.currentInput)
+        assertEquals("", calculator.operator)
+        assertTrue(calculator.isNewInput)
+    }
+    
+    @Test
+    fun calculator_nan_and_infinity_handling() {
+        // Test result validation in onEqualsPressed
+        calculator.currentInput = "0"
+        calculator.operator = "/"
+        calculator.operand1 = 0.0
+        calculator.isNewInput = false
+        
+        calculator.onEqualsPressed()
+        
+        // Should handle NaN result
+        assertEquals("", calculator.currentInput)
+        assertEquals("", calculator.operator)
+        assertTrue(calculator.isNewInput)
     }
 }
