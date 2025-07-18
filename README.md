@@ -142,7 +142,23 @@ Run tests with:
 
 ### Creating a Release
 
-To create a new release with APK files:
+There are two ways to create a new release with APK files:
+
+#### 🚀 Automatic Releases (Recommended)
+
+Releases are now created automatically when pull requests are merged to the main branch:
+
+1. Create a pull request with your changes
+2. Once the PR is reviewed and merged to main, the system will:
+   - Automatically determine the next version number (increments patch version)
+   - Create a git tag (e.g., v1.0.0 → v1.0.1)
+   - Build debug and release APK files
+   - Create a GitHub release with detailed notes
+   - Upload APK files to the release
+
+#### 📋 Manual Releases
+
+You can still create releases manually using git tags:
 
 1. Create and push a version tag:
 ```bash
@@ -156,6 +172,13 @@ git push origin v1.0.0
    - Upload APK files to the release
 
 3. Users can then download the APK files from the [releases page](https://github.com/skippdot/kids-calculator/releases)
+
+#### 🏷️ Versioning Strategy
+
+- **Automatic releases**: Increment the patch version (e.g., v1.0.5 → v1.0.6)
+- **Manual releases**: Use any valid semantic version tag (e.g., v1.1.0, v2.0.0)
+- **First release**: Starts at v1.0.0 if no previous tags exist
+- **Version format**: Must follow `vX.Y.Z` pattern (semantic versioning with 'v' prefix)
 
 ## Contributing
 
