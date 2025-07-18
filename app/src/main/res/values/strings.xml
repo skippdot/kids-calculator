@@ -27,4 +27,10 @@
     <string name="dialog_name_save">Сохранить</string>
     <string name="dialog_name_cancel">Отмена</string>
     <string name="tts_hello_prefix">Привет</string>
+    
+    <!-- Theme switcher strings -->
+    <string name="theme_switcher">🦁</string>
+    <string name="theme_default_name">Default</string>
+    <string name="theme_lion_king_name">Lion King</string>
+    <string name="tts_theme_switched">Тема изменена</string>
 </resources>

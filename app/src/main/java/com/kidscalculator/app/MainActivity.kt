@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var display: TextView
     private lateinit var tts: TextToSpeech
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var themeManager: ThemeManager
     
     private var currentInput = ""
     private var operator = ""
@@ -35,8 +36,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         display = findViewById(R.id.display)
         tts = TextToSpeech(this, this)
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        themeManager = ThemeManager(this)
         
         setupButtons()
+        applyCurrentTheme()
     }
     
     override fun onInit(status: Int) {
@@ -131,6 +134,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         helpButton.setOnLongClickListener {
             onHelpButtonLongClick()
             true
+        }
+        
+        // Theme switcher button
+        findViewById<Button>(R.id.btn_theme).setOnClickListener {
+            onThemeButtonClick()
         }
     }
     
@@ -347,6 +355,91 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         sharedPreferences.edit()
             .putString(KEY_USER_NAME, name)
             .apply()
+    }
+    
+    private fun onThemeButtonClick() {
+        val newTheme = themeManager.toggleTheme()
+        applyCurrentTheme()
+        speakText(getString(R.string.tts_theme_switched))
+    }
+    
+    private fun applyCurrentTheme() {
+        val isLionKing = themeManager.isLionKingTheme()
+        
+        // Update main layout background
+        val mainLayout = findViewById<android.widget.LinearLayout>(android.R.id.content).getChildAt(0) as android.widget.LinearLayout
+        mainLayout.setBackgroundColor(getColor(
+            if (isLionKing) R.color.lion_king_background else R.color.kid_background
+        ))
+        
+        // Update display background and text color
+        display.setBackgroundColor(getColor(
+            if (isLionKing) R.color.lion_king_surface else R.color.kid_surface
+        ))
+        display.setTextColor(getColor(
+            if (isLionKing) R.color.lion_king_on_surface else R.color.kid_on_surface
+        ))
+        
+        // Update number buttons
+        val numberButtons = arrayOf(
+            R.id.btn_0, R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4,
+            R.id.btn_5, R.id.btn_6, R.id.btn_7, R.id.btn_8, R.id.btn_9, R.id.btn_decimal
+        )
+        numberButtons.forEach { buttonId ->
+            val button = findViewById<Button>(buttonId)
+            button.backgroundTintList = getColorStateList(
+                if (isLionKing) R.color.lion_king_number_button else R.color.number_button
+            )
+            button.setTextColor(getColor(
+                if (isLionKing) R.color.lion_king_on_primary else R.color.kid_on_primary
+            ))
+        }
+        
+        // Update operator buttons
+        val operatorButtons = arrayOf(R.id.btn_plus, R.id.btn_minus, R.id.btn_multiply, R.id.btn_divide)
+        operatorButtons.forEach { buttonId ->
+            val button = findViewById<Button>(buttonId)
+            button.backgroundTintList = getColorStateList(
+                if (isLionKing) R.color.lion_king_operator_button else R.color.operator_button
+            )
+            button.setTextColor(getColor(
+                if (isLionKing) R.color.lion_king_on_secondary else R.color.kid_on_secondary
+            ))
+        }
+        
+        // Update equals button
+        findViewById<Button>(R.id.btn_equals).apply {
+            backgroundTintList = getColorStateList(
+                if (isLionKing) R.color.lion_king_equals_button else R.color.equals_button
+            )
+            setTextColor(getColor(
+                if (isLionKing) R.color.lion_king_on_primary else R.color.kid_on_primary
+            ))
+        }
+        
+        // Update clear button
+        findViewById<Button>(R.id.btn_clear).apply {
+            backgroundTintList = getColorStateList(
+                if (isLionKing) R.color.lion_king_clear_button else R.color.clear_button
+            )
+            setTextColor(getColor(
+                if (isLionKing) R.color.lion_king_on_error else R.color.kid_on_error
+            ))
+        }
+        
+        // Update theme button
+        findViewById<Button>(R.id.btn_theme).apply {
+            backgroundTintList = getColorStateList(
+                if (isLionKing) R.color.lion_king_tertiary else R.color.lion_king_gold
+            )
+        }
+        
+        // Update help button
+        findViewById<Button>(R.id.btn_help).apply {
+            backgroundTintList = getColorStateList(
+                if (isLionKing) R.color.lion_king_accent else R.color.kid_tertiary
+            )
+        }
     }
     
     override fun onDestroy() {

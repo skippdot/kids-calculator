@@ -1,0 +1,126 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="#FFF5E6D3"
+        android:pathData="M54,54m-54,0a54,54 0,1 1,108 0a54,54 0,1 1,-108 0"/>
+    
+    <!-- Poodle head shape (main head) -->
+    <path
+        android:fillColor="#FFB8860B"
+        android:pathData="M54,30 C66,30 75,39 75,51 C75,63 66,72 54,72 C42,72 33,63 33,51 C33,39 42,30 54,30z"/>
+    
+    <!-- Left ear -->
+    <ellipse
+        android:fillColor="#FFB8860B"
+        android:cx="42"
+        android:cy="42"
+        android:rx="8"
+        android:ry="12"/>
+    
+    <!-- Right ear -->
+    <ellipse
+        android:fillColor="#FFB8860B"
+        android:cx="66"
+        android:cy="42"
+        android:rx="8"
+        android:ry="12"/>
+    
+    <!-- Poodle hair poofs on head -->
+    <circle
+        android:fillColor="#FFCD853F"
+        android:cx="45"
+        android:cy="35"
+        android:r="6"/>
+    <circle
+        android:fillColor="#FFCD853F"
+        android:cx="63"
+        android:cy="35"
+        android:r="6"/>
+    <circle
+        android:fillColor="#FFCD853F"
+        android:cx="54"
+        android:cy="32"
+        android:r="5"/>
+    
+    <!-- Eyes -->
+    <circle
+        android:fillColor="#FF000000"
+        android:cx="48"
+        android:cy="48"
+        android:r="3"/>
+    <circle
+        android:fillColor="#FF000000"
+        android:cx="60"
+        android:cy="48"
+        android:r="3"/>
+    
+    <!-- Eye highlights -->
+    <circle
+        android:fillColor="#FFFFFFFF"
+        android:cx="49"
+        android:cy="47"
+        android:r="1"/>
+    <circle
+        android:fillColor="#FFFFFFFF"
+        android:cx="61"
+        android:cy="47"
+        android:r="1"/>
+    
+    <!-- Nose -->
+    <ellipse
+        android:fillColor="#FF000000"
+        android:cx="54"
+        android:cy="54"
+        android:rx="2"
+        android:ry="1.5"/>
+    
+    <!-- Mouth -->
+    <path
+        android:fillColor="none"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M50,58 Q54,62 58,58"/>
+    
+    <!-- Poodle poofs on ears -->
+    <circle
+        android:fillColor="#FFCD853F"
+        android:cx="42"
+        android:cy="47"
+        android:r="4"/>
+    <circle
+        android:fillColor="#FFCD853F"
+        android:cx="66"
+        android:cy="47"
+        android:r="4"/>
+    
+    <!-- Neck poof -->
+    <ellipse
+        android:fillColor="#FFCD853F"
+        android:cx="54"
+        android:cy="70"
+        android:rx="12"
+        android:ry="6"/>
+        
+    <!-- Calculator symbol overlay -->
+    <rect
+        android:fillColor="#FFFFFF"
+        android:x="74"
+        android:y="74"
+        android:width="24"
+        android:height="24"
+        android:rx="4"/>
+    
+    <!-- Plus sign -->
+    <path
+        android:fillColor="#FF4CAF50"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M86,80 L86,92 M80,86 L92,86"/>
+        
+</vector>

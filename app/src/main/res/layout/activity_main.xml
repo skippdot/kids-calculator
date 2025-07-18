@@ -265,19 +265,39 @@
 
     </GridLayout>
 
-    <!-- Help button in corner -->
-    <Button
-        android:id="@+id/btn_help"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/kid_tertiary"
-        android:text="?"
-        android:textColor="@color/kid_on_tertiary"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:elevation="8dp" />
+    <!-- Bottom buttons container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="16dp">
+
+        <!-- Theme switcher button -->
+        <Button
+            android:id="@+id/btn_theme"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/lion_king_gold"
+            android:text="@string/theme_switcher"
+            android:textColor="@color/kid_on_tertiary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:elevation="8dp" />
+
+        <!-- Help button in corner -->
+        <Button
+            android:id="@+id/btn_help"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:backgroundTint="@color/kid_tertiary"
+            android:text="?"
+            android:textColor="@color/kid_on_tertiary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:elevation="8dp" />
+
+    </LinearLayout>
 
 </LinearLayout>
