@@ -32,6 +32,9 @@ For the bleeding-edge version, you can also:
 - **Basic Math Operations**: Addition, subtraction, multiplication, and division
 - **Voice Feedback**: Announces results and operations audibly
 - **Multilingual Support**: Primary support for Russian, with fallback to system language
+- **🦁 Theme Switcher**: Toggle between default and "Lion King" inspired themes with warm, earthy colors
+- **Custom Poodle App Icon**: Playful cartoonish poodle head icon with reddish coat
+- **Personalized Experience**: Help button with name storage for child-friendly interaction
 
 ## Technical Details
 

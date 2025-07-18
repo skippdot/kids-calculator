@@ -1,7 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'jacoco'
+    // Temporarily disabled JaCoCo due to Java 24 compatibility issues
+    // id 'jacoco'
 }
 
 android {
@@ -42,43 +43,45 @@ android {
             includeAndroidResources = true
             returnDefaultValues = true
         }
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses = true
-                excludes = ['jdk.internal.*']
-            }
-        }
+        // JaCoCo configuration temporarily disabled
+        // unitTests.all {
+        //     jacoco {
+        //         includeNoLocationClasses = true
+        //         excludes = ['jdk.internal.*']
+        //     }
+        // }
     }
 }
 
 
-jacoco {
-    toolVersion = "0.8.8"
-}
+// JaCoCo configuration temporarily disabled due to Java 24 compatibility issues
+// jacoco {
+//     toolVersion = "0.8.12"
+// }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
-    reports {
-        xml.required = true
-        html.required = true
-    }
+// task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+//     reports {
+//         xml.required = true
+//         html.required = true
+//     }
 
-    def fileFilter = [
-        '**/R.class',
-        '**/R$*.class',
-        '**/BuildConfig.*',
-        '**/Manifest*.*',
-        '**/*Test*.*',
-        'android/**/*.*',
-        '**/data/models/**'
-    ]
+//     def fileFilter = [
+//         '**/R.class',
+//         '**/R$*.class',
+//         '**/BuildConfig.*',
+//         '**/Manifest*.*',
+//         '**/*Test*.*',
+//         'android/**/*.*',
+//         '**/data/models/**'
+//     ]
 
-    def debugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
+//     def debugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
+//     def mainSrc = "${project.projectDir}/src/main/java"
 
-    sourceDirectories.setFrom(files([mainSrc]))
-    classDirectories.setFrom(files([debugTree]))
-    executionData.setFrom(fileTree(dir: buildDir, includes: ['**/*.exec', '**/*.ec']))
-}
+//     sourceDirectories.setFrom(files([mainSrc]))
+//     classDirectories.setFrom(files([debugTree]))
+//     executionData.setFrom(fileTree(dir: buildDir, includes: ['**/*.exec', '**/*.ec']))
+// }
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'

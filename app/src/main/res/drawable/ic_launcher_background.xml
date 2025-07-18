@@ -9,23 +9,19 @@
         android:fillColor="#FFF5E6D3"
         android:pathData="M0,0h108v108h-108z"/>
     
-    <!-- Subtle circular pattern -->
-    <circle
+    <!-- Subtle circular pattern using path instead of circle -->
+    <path
         android:fillColor="#00000000"
         android:strokeColor="#FFFF8C42"
         android:strokeWidth="2"
         android:strokeAlpha="0.3"
-        android:cx="54"
-        android:cy="54"
-        android:r="45"/>
+        android:pathData="M54,9 A45,45 0 0,1 99,54 A45,45 0 0,1 54,99 A45,45 0 0,1 9,54 A45,45 0 0,1 54,9 Z"/>
         
-    <circle
+    <path
         android:fillColor="#00000000"
         android:strokeColor="#FF8FBC8F"
         android:strokeWidth="1"
         android:strokeAlpha="0.2"
-        android:cx="54"
-        android:cy="54"
-        android:r="35"/>
+        android:pathData="M54,19 A35,35 0 0,1 89,54 A35,35 0 0,1 54,89 A35,35 0 0,1 19,54 A35,35 0 0,1 54,19 Z"/>
         
 </vector>

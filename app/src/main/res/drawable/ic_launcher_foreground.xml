@@ -15,112 +15,75 @@
         android:pathData="M54,30 C66,30 75,39 75,51 C75,63 66,72 54,72 C42,72 33,63 33,51 C33,39 42,30 54,30z"/>
     
     <!-- Left ear -->
-    <ellipse
+    <path
         android:fillColor="#FFB8860B"
-        android:cx="42"
-        android:cy="42"
-        android:rx="8"
-        android:ry="12"/>
+        android:pathData="M42,30 C50,30 58,36 58,42 C58,48 50,54 42,54 C34,54 26,48 26,42 C26,36 34,30 42,30z"/>
     
     <!-- Right ear -->
-    <ellipse
+    <path
         android:fillColor="#FFB8860B"
-        android:cx="66"
-        android:cy="42"
-        android:rx="8"
-        android:ry="12"/>
+        android:pathData="M66,30 C74,30 82,36 82,42 C82,48 74,54 66,54 C58,54 50,48 50,42 C50,36 58,30 66,30z"/>
     
     <!-- Poodle hair poofs on head -->
-    <circle
+    <path
         android:fillColor="#FFCD853F"
-        android:cx="45"
-        android:cy="35"
-        android:r="6"/>
-    <circle
+        android:pathData="M45,29 C48,29 51,32 51,35 C51,38 48,41 45,41 C42,41 39,38 39,35 C39,32 42,29 45,29z"/>
+    <path
         android:fillColor="#FFCD853F"
-        android:cx="63"
-        android:cy="35"
-        android:r="6"/>
-    <circle
+        android:pathData="M63,29 C66,29 69,32 69,35 C69,38 66,41 63,41 C60,41 57,38 57,35 C57,32 60,29 63,29z"/>
+    <path
         android:fillColor="#FFCD853F"
-        android:cx="54"
-        android:cy="32"
-        android:r="5"/>
+        android:pathData="M54,27 C57,27 59,29 59,32 C59,35 57,37 54,37 C51,37 49,35 49,32 C49,29 51,27 54,27z"/>
     
     <!-- Eyes -->
-    <circle
+    <path
         android:fillColor="#FF000000"
-        android:cx="48"
-        android:cy="48"
-        android:r="3"/>
-    <circle
+        android:pathData="M48,45 C51,45 51,51 48,51 C45,51 45,45 48,45z"/>
+    <path
         android:fillColor="#FF000000"
-        android:cx="60"
-        android:cy="48"
-        android:r="3"/>
+        android:pathData="M60,45 C63,45 63,51 60,51 C57,51 57,45 60,45z"/>
     
     <!-- Eye highlights -->
-    <circle
+    <path
         android:fillColor="#FFFFFFFF"
-        android:cx="49"
-        android:cy="47"
-        android:r="1"/>
-    <circle
+        android:pathData="M49,46 C50,46 50,48 49,48 C48,48 48,46 49,46z"/>
+    <path
         android:fillColor="#FFFFFFFF"
-        android:cx="61"
-        android:cy="47"
-        android:r="1"/>
+        android:pathData="M61,46 C62,46 62,48 61,48 C60,48 60,46 61,46z"/>
     
     <!-- Nose -->
-    <ellipse
+    <path
         android:fillColor="#FF000000"
-        android:cx="54"
-        android:cy="54"
-        android:rx="2"
-        android:ry="1.5"/>
+        android:pathData="M54,52.5 C56,52.5 56,55.5 54,55.5 C52,55.5 52,52.5 54,52.5z"/>
     
     <!-- Mouth -->
     <path
-        android:fillColor="none"
         android:strokeColor="#FF000000"
         android:strokeWidth="2"
         android:strokeLineCap="round"
         android:pathData="M50,58 Q54,62 58,58"/>
     
     <!-- Poodle poofs on ears -->
-    <circle
+    <path
         android:fillColor="#FFCD853F"
-        android:cx="42"
-        android:cy="47"
-        android:r="4"/>
-    <circle
+        android:pathData="M42,43 C46,43 46,51 42,51 C38,51 38,43 42,43z"/>
+    <path
         android:fillColor="#FFCD853F"
-        android:cx="66"
-        android:cy="47"
-        android:r="4"/>
+        android:pathData="M66,43 C70,43 70,51 66,51 C62,51 62,43 66,43z"/>
     
     <!-- Neck poof -->
-    <ellipse
+    <path
         android:fillColor="#FFCD853F"
-        android:cx="54"
-        android:cy="70"
-        android:rx="12"
-        android:ry="6"/>
+        android:pathData="M54,64 C66,64 66,76 54,76 C42,76 42,64 54,64z"/>
         
     <!-- Calculator symbol overlay -->
-    <rect
+    <path
         android:fillColor="#FFFFFF"
-        android:x="74"
-        android:y="74"
-        android:width="24"
-        android:height="24"
-        android:rx="4"/>
+        android:pathData="M74,74 L98,74 L98,98 L74,98 Z"/>
     
     <!-- Plus sign -->
     <path
         android:fillColor="#FF4CAF50"
-        android:strokeWidth="3"
-        android:strokeLineCap="round"
         android:pathData="M86,80 L86,92 M80,86 L92,86"/>
         
 </vector>

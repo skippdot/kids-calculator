@@ -99,23 +99,14 @@ jobs:
         reporter: java-junit
         fail-on-empty: true
         
-    - name: Generate coverage report
-      run: ./gradlew testDebugUnitTest --tests "*CalculatorTest*" jacocoTestReport
+    - name: Run Calculator tests (Coverage temporarily disabled due to Java 24 compatibility)
+      run: ./gradlew testDebugUnitTest --tests "*CalculatorTest*"
       
-    - name: Upload coverage reports
+    - name: Upload test results
       uses: actions/upload-artifact@v4
       if: success() || failure()
       with:
-        name: coverage-report
+        name: test-results
         path: |
-          app/build/reports/kover/html/
-          app/build/reports/kover/report.xml
+          app/build/test-results/test*/*.xml
         retention-days: 30
-        
-    - name: Coverage comment
-      uses: MishaKav/pytest-coverage-comment@main
-      if: github.event_name == 'pull_request'
-      with:
-        coverage-data-path: app/build/reports/kover/report.xml
-        title: Code Coverage Report
-        badge-title: Coverage
