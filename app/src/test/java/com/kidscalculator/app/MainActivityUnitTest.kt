@@ -15,31 +15,31 @@ class MainActivityUnitTest {
     
     @Test
     fun testCalculatorInitialization() {
-        assertEquals("0", calculator.currentNumber)
-        assertEquals("0", calculator.result)
-        assertNull(calculator.operator)
-        assertNull(calculator.pendingOperand)
+        assertEquals("", calculator.currentInput)
+        assertEquals("", calculator.operator)
+        assertEquals(0.0, calculator.operand1, 0.001)
+        assertTrue(calculator.isNewInput)
     }
     
     @Test
     fun testNumberInput() {
         calculator.onNumberPressed("5")
-        assertEquals("5", calculator.currentNumber)
+        assertEquals("5", calculator.currentInput)
         
         calculator.onNumberPressed("3")
-        assertEquals("53", calculator.currentNumber)
+        assertEquals("53", calculator.currentInput)
     }
     
     @Test
     fun testClearOperation() {
         calculator.onNumberPressed("5")
         calculator.onNumberPressed("3")
-        calculator.onClear()
+        calculator.onClearPressed()
         
-        assertEquals("0", calculator.currentNumber)
-        assertEquals("0", calculator.result)
-        assertNull(calculator.operator)
-        assertNull(calculator.pendingOperand)
+        assertEquals("", calculator.currentInput)
+        assertEquals("", calculator.operator)
+        assertEquals(0.0, calculator.operand1, 0.001)
+        assertTrue(calculator.isNewInput)
     }
     
     @Test
@@ -49,7 +49,7 @@ class MainActivityUnitTest {
         calculator.onNumberPressed("3")
         calculator.onEqualsPressed()
         
-        assertEquals("5", calculator.result)
+        assertEquals("5", calculator.currentInput)
     }
     
     @Test
@@ -59,7 +59,7 @@ class MainActivityUnitTest {
         calculator.onNumberPressed("2")
         calculator.onEqualsPressed()
         
-        assertEquals("3", calculator.result)
+        assertEquals("3", calculator.currentInput)
     }
     
     @Test
@@ -69,7 +69,7 @@ class MainActivityUnitTest {
         calculator.onNumberPressed("4")
         calculator.onEqualsPressed()
         
-        assertEquals("12", calculator.result)
+        assertEquals("12", calculator.currentInput)
     }
     
     @Test
@@ -79,7 +79,7 @@ class MainActivityUnitTest {
         calculator.onNumberPressed("2")
         calculator.onEqualsPressed()
         
-        assertEquals("4", calculator.result)
+        assertEquals("4", calculator.currentInput)
     }
     
     @Test
@@ -89,7 +89,8 @@ class MainActivityUnitTest {
         calculator.onNumberPressed("0")
         calculator.onEqualsPressed()
         
-        assertEquals("0", calculator.result)
+        // After division by zero, calculator clears
+        assertEquals("", calculator.currentInput)
     }
     
     @Test
@@ -98,7 +99,7 @@ class MainActivityUnitTest {
         calculator.onDecimalPressed()
         calculator.onNumberPressed("2")
         
-        assertEquals("5.2", calculator.currentNumber)
+        assertEquals("5.2", calculator.currentInput)
     }
     
     @Test
@@ -111,7 +112,7 @@ class MainActivityUnitTest {
         calculator.onNumberPressed("4")
         calculator.onEqualsPressed()
         
-        assertEquals("20", calculator.result)
+        assertEquals("20", calculator.currentInput)
     }
     
     @Test
@@ -122,6 +123,6 @@ class MainActivityUnitTest {
         calculator.onDecimalPressed()
         calculator.onNumberPressed("3")
         
-        assertEquals("5.23", calculator.currentNumber)
+        assertEquals("5.23", calculator.currentInput)
     }
 }
