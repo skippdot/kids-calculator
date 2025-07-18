@@ -1,13 +1,18 @@
 name: Release APK
 
 on:
+  pull_request:
+    types: [closed]
+    branches: [main]  # Only trigger when PRs to main are merged
   push:
     tags:
-      - 'v*'  # Trigger on version tags like v1.0.0, v1.1.0, etc.
+      - 'v*'  # Keep existing tag-based releases for manual releases
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    # Only run if it's a merged PR or a tag push
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     permissions:
       contents: write
       pull-requests: write
@@ -16,6 +21,53 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history to get tags
+        
+    - name: Determine version for PR merge
+      id: determine_version
+      if: github.event_name == 'pull_request'
+      run: |
+        # Get the latest tag, if any
+        LATEST_TAG=$(git tag --sort=-version:refname | head -n1 || echo "")
+        
+        if [ -z "$LATEST_TAG" ]; then
+          # No tags exist, start with v1.0.0
+          NEW_VERSION="v1.0.0"
+        else
+          # Parse the latest tag and increment patch version
+          # Remove 'v' prefix and split by dots
+          VERSION_NUMBER=${LATEST_TAG#v}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION_NUMBER"
+          
+          # Increment patch version
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="v${MAJOR}.${MINOR}.${NEW_PATCH}"
+        fi
+        
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+        echo "Creating new version: $NEW_VERSION"
+        
+    - name: Create tag for PR merge
+      if: github.event_name == 'pull_request'
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git tag ${{ steps.determine_version.outputs.NEW_VERSION }}
+        git push origin ${{ steps.determine_version.outputs.NEW_VERSION }}
+        
+    - name: Get version from tag
+      id: get_version
+      run: |
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          # Use the version we just created
+          VERSION="${{ steps.determine_version.outputs.NEW_VERSION }}"
+        else
+          # Use the tag that triggered this workflow
+          VERSION="${GITHUB_REF#refs/tags/}"
+        fi
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Using version: $VERSION"
       
     - name: Set up JDK 17
       uses: actions/setup-java@v4
@@ -37,14 +89,14 @@ jobs:
       run: chmod +x gradlew
       
     - name: Build debug APK
+      env:
+        GITHUB_REF: refs/tags/${{ steps.get_version.outputs.VERSION }}
       run: ./gradlew assembleDebug
       
     - name: Build release APK
+      env:
+        GITHUB_REF: refs/tags/${{ steps.get_version.outputs.VERSION }}
       run: ./gradlew assembleRelease
-      
-    - name: Get version from tag
-      id: get_version
-      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
       
     - name: Check APK files
       run: |
@@ -56,30 +108,56 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        # Create release notes based on trigger type
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          echo "## Kids Calculator ${{ steps.get_version.outputs.VERSION }}" > release_notes.md
+          echo "" >> release_notes.md
+          echo "### 🚀 Automatic Release" >> release_notes.md
+          echo "This release was automatically created when PR #${{ github.event.pull_request.number }} was merged: \"${{ github.event.pull_request.title }}\"" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### 🎯 Features" >> release_notes.md
+          echo "- Child-friendly calculator with large buttons" >> release_notes.md
+          echo "- Russian text-to-speech support" >> release_notes.md
+          echo "- Mathematical operations: addition, subtraction, multiplication, division" >> release_notes.md
+          echo "- Voice feedback for numbers and operations" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### 📱 Installation" >> release_notes.md
+          echo "1. Download the APK file below" >> release_notes.md
+          echo "2. Enable \"Install from unknown sources\" in your Android settings" >> release_notes.md
+          echo "3. Install the APK file" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### 🔧 Technical Details" >> release_notes.md
+          echo "- **Target Android Version**: API 34 (Android 14)" >> release_notes.md
+          echo "- **Minimum Android Version**: API 21 (Android 5.0)" >> release_notes.md
+          echo "- **Architecture**: Universal (ARM64, ARM32, x86_64, x86)" >> release_notes.md
+        else
+          echo "## Kids Calculator ${{ steps.get_version.outputs.VERSION }}" > release_notes.md
+          echo "" >> release_notes.md
+          echo "### 🎯 Features" >> release_notes.md
+          echo "- Child-friendly calculator with large buttons" >> release_notes.md
+          echo "- Russian text-to-speech support" >> release_notes.md
+          echo "- Mathematical operations: addition, subtraction, multiplication, division" >> release_notes.md
+          echo "- Voice feedback for numbers and operations" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### 📱 Installation" >> release_notes.md
+          echo "1. Download the APK file below" >> release_notes.md
+          echo "2. Enable \"Install from unknown sources\" in your Android settings" >> release_notes.md
+          echo "3. Install the APK file" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### 🔧 Technical Details" >> release_notes.md
+          echo "- **Target Android Version**: API 34 (Android 14)" >> release_notes.md
+          echo "- **Minimum Android Version**: API 21 (Android 5.0)" >> release_notes.md
+          echo "- **Architecture**: Universal (ARM64, ARM32, x86_64, x86)" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### 📋 What's New" >> release_notes.md
+          echo "- Fixed NumberFormatException crash with comma decimal input" >> release_notes.md
+          echo "- Fixed release APK installation issues" >> release_notes.md
+          echo "- Added Russian error messages" >> release_notes.md
+          echo "- Improved error handling for TTS operations" >> release_notes.md
+        fi
+        
         gh release create ${{ steps.get_version.outputs.VERSION }} \
           --title "Kids Calculator ${{ steps.get_version.outputs.VERSION }}" \
-          --notes "## Kids Calculator ${{ steps.get_version.outputs.VERSION }}
-          
-          ### 🎯 Features
-          - Child-friendly calculator with large buttons
-          - Russian text-to-speech support
-          - Mathematical operations: addition, subtraction, multiplication, division
-          - Voice feedback for numbers and operations
-          
-          ### 📱 Installation
-          1. Download the APK file below
-          2. Enable \"Install from unknown sources\" in your Android settings
-          3. Install the APK file
-          
-          ### 🔧 Technical Details
-          - **Target Android Version**: API 34 (Android 14)
-          - **Minimum Android Version**: API 21 (Android 5.0)
-          - **Architecture**: Universal (ARM64, ARM32, x86_64, x86)
-          
-          ### 📋 What's New
-          - Fixed NumberFormatException crash with comma decimal input
-          - Fixed release APK installation issues
-          - Added Russian error messages
-          - Improved error handling for TTS operations" \
+          --notes-file release_notes.md \
           app/build/outputs/apk/debug/app-debug.apk#kids-calculator-${{ steps.get_version.outputs.VERSION }}-debug.apk \
           app/build/outputs/apk/release/app-release.apk#kids-calculator-${{ steps.get_version.outputs.VERSION }}-release.apk
