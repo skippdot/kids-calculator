@@ -19,7 +19,7 @@
     <string name="tts_division_by_zero">нельзя делить на ноль</string>
     <string name="tts_error">ошибка</string>
     <string name="tts_number_too_long">число слишком длинное</string>
-    <string name="tts_help">Валик привет</string>
+    <string name="tts_help">Я калькулятор для детей</string>
     
     <!-- Name dialog strings -->
     <string name="dialog_name_title">Как тебя зовут?</string>

@@ -307,6 +307,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun onHelpButtonClick() {
         val savedName = sharedPreferences.getString(KEY_USER_NAME, null)
         if (savedName.isNullOrEmpty()) {
+            // Provide helpful guidance for first-time users
+            speakText(getString(R.string.tts_help))
             showNameDialog()
         } else {
             speakText("${getString(R.string.tts_hello_prefix)} $savedName")
