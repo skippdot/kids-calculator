@@ -1,9 +1,13 @@
 package com.kidscalculator.app
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
@@ -11,11 +15,17 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     
     private lateinit var display: TextView
     private lateinit var tts: TextToSpeech
+    private lateinit var sharedPreferences: SharedPreferences
     
     private var currentInput = ""
     private var operator = ""
     private var operand1 = 0.0
     private var isNewInput = true
+    
+    companion object {
+        private const val PREFS_NAME = "KidsCalculatorPrefs"
+        private const val KEY_USER_NAME = "user_name"
+    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +33,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         
         display = findViewById(R.id.display)
         tts = TextToSpeech(this, this)
+        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         
         setupButtons()
     }
@@ -96,9 +107,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             onDecimalPressed()
         }
         
-        // Help button
-        findViewById<Button>(R.id.btn_help).setOnClickListener {
-            speakText(getString(R.string.tts_help))
+        // Help button with name functionality
+        val helpButton = findViewById<Button>(R.id.btn_help)
+        helpButton.setOnClickListener {
+            onHelpButtonClick()
+        }
+        helpButton.setOnLongClickListener {
+            onHelpButtonLongClick()
+            true
         }
     }
     
@@ -247,6 +263,49 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         } catch (e: Exception) {
             // Silently handle TTS errors - don't crash the app
         }
+    }
+    
+    private fun onHelpButtonClick() {
+        val savedName = sharedPreferences.getString(KEY_USER_NAME, null)
+        if (savedName.isNullOrEmpty()) {
+            showNameDialog()
+        } else {
+            speakText("${getString(R.string.tts_hello_prefix)} $savedName")
+        }
+    }
+    
+    private fun onHelpButtonLongClick() {
+        showNameDialog()
+    }
+    
+    private fun showNameDialog() {
+        val editText = EditText(this)
+        editText.hint = getString(R.string.dialog_name_hint)
+        
+        // Pre-fill with existing name if available
+        val savedName = sharedPreferences.getString(KEY_USER_NAME, null)
+        if (!savedName.isNullOrEmpty()) {
+            editText.setText(savedName)
+        }
+        
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.dialog_name_title))
+            .setView(editText)
+            .setPositiveButton(getString(R.string.dialog_name_save)) { _, _ ->
+                val name = editText.text.toString().trim()
+                if (name.isNotEmpty()) {
+                    saveUserName(name)
+                    speakText("${getString(R.string.tts_hello_prefix)} $name")
+                }
+            }
+            .setNegativeButton(getString(R.string.dialog_name_cancel), null)
+            .show()
+    }
+    
+    private fun saveUserName(name: String) {
+        sharedPreferences.edit()
+            .putString(KEY_USER_NAME, name)
+            .apply()
     }
     
     override fun onDestroy() {

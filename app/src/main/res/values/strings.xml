@@ -19,4 +19,11 @@
     <string name="tts_division_by_zero">нельзя делить на ноль</string>
     <string name="tts_error">ошибка</string>
     <string name="tts_help">Валик привет</string>
+    
+    <!-- Name dialog strings -->
+    <string name="dialog_name_title">Как тебя зовут?</string>
+    <string name="dialog_name_hint">Введи своё имя</string>
+    <string name="dialog_name_save">Сохранить</string>
+    <string name="dialog_name_cancel">Отмена</string>
+    <string name="tts_hello_prefix">Привет</string>
 </resources>
