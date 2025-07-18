@@ -1,9 +1,13 @@
 package com.kidscalculator.app
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
@@ -11,11 +15,18 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     
     private lateinit var display: TextView
     private lateinit var tts: TextToSpeech
+    private lateinit var sharedPreferences: SharedPreferences
     
     private var currentInput = ""
     private var operator = ""
     private var operand1 = 0.0
     private var isNewInput = true
+    
+    companion object {
+        private const val PREFS_NAME = "KidsCalculatorPrefs"
+        private const val KEY_USER_NAME = "user_name"
+        private const val MAX_INPUT_LENGTH = 10 // Maximum digits for child-friendly use
+    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +34,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         
         display = findViewById(R.id.display)
         tts = TextToSpeech(this, this)
+        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         
         setupButtons()
     }
@@ -41,6 +53,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
             // Set speech rate slower for children
             tts.setSpeechRate(0.8f)
+        } else {
+            // TTS failed to initialize - app will still work without voice feedback
+            // Could add visual feedback here if needed
         }
     }
     
@@ -53,7 +68,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         
         numberButtons.forEachIndexed { index, buttonId ->
             findViewById<Button>(buttonId).setOnClickListener {
-                val number = if (buttonId == R.id.btn_0) "0" else index.toString()
+                val number = when (buttonId) {
+                    R.id.btn_0 -> "0"
+                    R.id.btn_1 -> "1"
+                    R.id.btn_2 -> "2"
+                    R.id.btn_3 -> "3"
+                    R.id.btn_4 -> "4"
+                    R.id.btn_5 -> "5"
+                    R.id.btn_6 -> "6"
+                    R.id.btn_7 -> "7"
+                    R.id.btn_8 -> "8"
+                    R.id.btn_9 -> "9"
+                    else -> index.toString()
+                }
                 onNumberPressed(number)
                 speakText(number)
             }
@@ -96,9 +123,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             onDecimalPressed()
         }
         
-        // Help button
-        findViewById<Button>(R.id.btn_help).setOnClickListener {
-            speakText(getString(R.string.tts_help))
+        // Help button with name functionality
+        val helpButton = findViewById<Button>(R.id.btn_help)
+        helpButton.setOnClickListener {
+            onHelpButtonClick()
+        }
+        helpButton.setOnLongClickListener {
+            onHelpButtonLongClick()
+            true
         }
     }
     
@@ -107,7 +139,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             currentInput = number
             isNewInput = false
         } else {
-            currentInput += number
+            // Prevent input that's too long for children to handle
+            if (currentInput.length < MAX_INPUT_LENGTH) {
+                currentInput += number
+            } else {
+                // Give feedback that input is too long
+                speakText(getString(R.string.tts_number_too_long))
+                return
+            }
         }
         updateDisplay(currentInput)
     }
@@ -117,6 +156,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             currentInput = "0."
             isNewInput = false
         } else {
+            // Check input length limit
+            if (currentInput.length >= MAX_INPUT_LENGTH) {
+                speakText(getString(R.string.tts_number_too_long))
+                return
+            }
             // Only add decimal point if there isn't one already
             if (!currentInput.contains(".") && !currentInput.contains(",")) {
                 currentInput += "."
@@ -129,6 +173,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun parseNumber(input: String): Double {
         if (input.isEmpty()) {
             throw NumberFormatException("Empty input")
+        }
+        
+        // Validate input length to prevent overflow issues
+        if (input.length > MAX_INPUT_LENGTH + 2) { // +2 for decimal point and sign
+            throw NumberFormatException("Input too long")
         }
         
         // Replace comma with dot for parsing and handle multiple decimal separators
@@ -184,6 +233,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         if (operand2 != 0.0) {
                             operand1 / operand2
                         } else {
+                            // Reset calculator state on division by zero
+                            currentInput = ""
+                            operator = ""
+                            operand1 = 0.0
+                            isNewInput = true
+                            updateDisplay("Error")
                             speakText(getString(R.string.tts_division_by_zero))
                             return
                         }
@@ -247,6 +302,51 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         } catch (e: Exception) {
             // Silently handle TTS errors - don't crash the app
         }
+    }
+    
+    private fun onHelpButtonClick() {
+        val savedName = sharedPreferences.getString(KEY_USER_NAME, null)
+        if (savedName.isNullOrEmpty()) {
+            // Provide helpful guidance for first-time users
+            speakText(getString(R.string.tts_help))
+            showNameDialog()
+        } else {
+            speakText("${getString(R.string.tts_hello_prefix)} $savedName")
+        }
+    }
+    
+    private fun onHelpButtonLongClick() {
+        showNameDialog()
+    }
+    
+    private fun showNameDialog() {
+        val editText = EditText(this)
+        editText.hint = getString(R.string.dialog_name_hint)
+        
+        // Pre-fill with existing name if available
+        val savedName = sharedPreferences.getString(KEY_USER_NAME, null)
+        if (!savedName.isNullOrEmpty()) {
+            editText.setText(savedName)
+        }
+        
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.dialog_name_title))
+            .setView(editText)
+            .setPositiveButton(getString(R.string.dialog_name_save)) { _, _ ->
+                val name = editText.text.toString().trim()
+                if (name.isNotEmpty()) {
+                    saveUserName(name)
+                    speakText("${getString(R.string.tts_hello_prefix)} $name")
+                }
+            }
+            .setNegativeButton(getString(R.string.dialog_name_cancel), null)
+            .show()
+    }
+    
+    private fun saveUserName(name: String) {
+        sharedPreferences.edit()
+            .putString(KEY_USER_NAME, name)
+            .apply()
     }
     
     override fun onDestroy() {
