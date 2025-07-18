@@ -37,18 +37,18 @@ jobs:
       run: chmod +x gradlew
       
     - name: Run tests and generate coverage
-      run: ./gradlew testDebugUnitTest --tests "*CalculatorTest*" koverXmlReport
+      run: ./gradlew testDebugUnitTest jacocoTestReport
       
     - name: Extract coverage percentage
       id: coverage
       run: |
-        if [ -f app/build/reports/kover/report.xml ]; then
-          # Parse coverage from XML (this is a simplified version)
-          COVERAGE=$(grep -o 'covered="[0-9]*"' app/build/reports/kover/report.xml | head -1 | sed 's/covered="//' | sed 's/"//')
-          MISSED=$(grep -o 'missed="[0-9]*"' app/build/reports/kover/report.xml | head -1 | sed 's/missed="//' | sed 's/"//')
-          if [ "$COVERAGE" -gt 0 ] || [ "$MISSED" -gt 0 ]; then
-            TOTAL=$((COVERAGE + MISSED))
-            PERCENTAGE=$(( (COVERAGE * 100) / TOTAL ))
+        if [ -f app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml ]; then
+          # Parse coverage from JaCoCo XML report
+          COVERED=$(grep -o 'covered="[0-9]*"' app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml | head -1 | sed 's/covered="//' | sed 's/"//')
+          MISSED=$(grep -o 'missed="[0-9]*"' app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml | head -1 | sed 's/missed="//' | sed 's/"//')
+          if [ "$COVERED" -gt 0 ] || [ "$MISSED" -gt 0 ]; then
+            TOTAL=$((COVERED + MISSED))
+            PERCENTAGE=$(( (COVERED * 100) / TOTAL ))
           else
             PERCENTAGE=90
           fi
