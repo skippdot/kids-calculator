@@ -83,29 +83,52 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     else -> index.toString()
                 }
                 onNumberPressed(number)
-                speakText(number)
+                
+                // Speak number or animal sound based on theme
+                if (themeManager.isAnimalTheme()) {
+                    val animalSound = getAnimalSoundForNumber(number)
+                    speakText(animalSound)
+                } else {
+                    speakText(number)
+                }
             }
         }
         
         // Operator buttons
         findViewById<Button>(R.id.btn_plus).setOnClickListener {
             onOperatorPressed("+")
-            speakText(getString(R.string.tts_plus))
+            if (themeManager.isAnimalTheme()) {
+                speakText(getString(R.string.tts_animal_plus))
+            } else {
+                speakText(getString(R.string.tts_plus))
+            }
         }
         
         findViewById<Button>(R.id.btn_minus).setOnClickListener {
             onOperatorPressed("-")
-            speakText(getString(R.string.tts_minus))
+            if (themeManager.isAnimalTheme()) {
+                speakText(getString(R.string.tts_animal_minus))
+            } else {
+                speakText(getString(R.string.tts_minus))
+            }
         }
         
         findViewById<Button>(R.id.btn_multiply).setOnClickListener {
             onOperatorPressed("*")
-            speakText(getString(R.string.tts_multiply))
+            if (themeManager.isAnimalTheme()) {
+                speakText(getString(R.string.tts_animal_multiply))
+            } else {
+                speakText(getString(R.string.tts_multiply))
+            }
         }
         
         findViewById<Button>(R.id.btn_divide).setOnClickListener {
             onOperatorPressed("/")
-            speakText(getString(R.string.tts_divide))
+            if (themeManager.isAnimalTheme()) {
+                speakText(getString(R.string.tts_animal_divide))
+            } else {
+                speakText(getString(R.string.tts_divide))
+            }
         }
         
         findViewById<Button>(R.id.btn_equals).setOnClickListener {
@@ -114,13 +137,21 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         
         findViewById<Button>(R.id.btn_clear).setOnClickListener {
             onClearPressed()
-            speakText(getString(R.string.tts_clear))
+            if (themeManager.isAnimalTheme()) {
+                speakText(getString(R.string.tts_animal_clear))
+            } else {
+                speakText(getString(R.string.tts_clear))
+            }
         }
         
         // Decimal point button
         findViewById<Button>(R.id.btn_decimal).setOnClickListener {
             onDecimalPressed()
-            speakText("точка")
+            if (themeManager.isAnimalTheme()) {
+                speakText(getString(R.string.tts_animal_decimal))
+            } else {
+                speakText("точка")
+            }
         }
         
         // Help button with name functionality
@@ -161,7 +192,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // Speak the result
         val result = calculator.currentInput
         if (result.isNotEmpty() && result != "Error") {
-            speakText("${getString(R.string.tts_equals)} $result")
+            if (themeManager.isAnimalTheme()) {
+                speakText("${getString(R.string.tts_animal_equals)} $result")
+            } else {
+                speakText("${getString(R.string.tts_equals)} $result")
+            }
         } else {
             speakText(getString(R.string.tts_error))
         }
@@ -175,6 +210,90 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun updateDisplay() {
         val displayText = if (calculator.currentInput.isEmpty()) "0" else calculator.currentInput
         display.text = displayText
+    }
+    
+    private fun getAnimalSoundForNumber(number: String): String {
+        return when (number) {
+            "0" -> getString(R.string.tts_animal_0)
+            "1" -> getString(R.string.tts_animal_1)
+            "2" -> getString(R.string.tts_animal_2)
+            "3" -> getString(R.string.tts_animal_3)
+            "4" -> getString(R.string.tts_animal_4)
+            "5" -> getString(R.string.tts_animal_5)
+            "6" -> getString(R.string.tts_animal_6)
+            "7" -> getString(R.string.tts_animal_7)
+            "8" -> getString(R.string.tts_animal_8)
+            "9" -> getString(R.string.tts_animal_9)
+            else -> number
+        }
+    }
+    
+    private fun getAnimalEmojiForNumber(number: String): String {
+        return when (number) {
+            "0" -> "🐴"
+            "1" -> "🐱"
+            "2" -> "🐶"
+            "3" -> "🐸"
+            "4" -> "🐮"
+            "5" -> "🐷"
+            "6" -> "🐔"
+            "7" -> "🐑"
+            "8" -> "🦆"
+            "9" -> "🦆"
+            else -> ""
+        }
+    }
+    
+    private fun updateButtonTexts() {
+        val isAnimal = themeManager.isAnimalTheme()
+        
+        // Update number buttons with animal emojis in animal theme
+        val numberButtons = arrayOf(
+            R.id.btn_0, R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4,
+            R.id.btn_5, R.id.btn_6, R.id.btn_7, R.id.btn_8, R.id.btn_9
+        )
+        
+        numberButtons.forEach { buttonId ->
+            val button = findViewById<Button>(buttonId)
+            val number = when (buttonId) {
+                R.id.btn_0 -> "0"
+                R.id.btn_1 -> "1"
+                R.id.btn_2 -> "2"
+                R.id.btn_3 -> "3"
+                R.id.btn_4 -> "4"
+                R.id.btn_5 -> "5"
+                R.id.btn_6 -> "6"
+                R.id.btn_7 -> "7"
+                R.id.btn_8 -> "8"
+                R.id.btn_9 -> "9"
+                else -> ""
+            }
+            
+            if (isAnimal) {
+                button.text = "$number${getAnimalEmojiForNumber(number)}"
+            } else {
+                button.text = number
+            }
+        }
+        
+        // Update operator buttons with animal emojis in animal theme
+        if (isAnimal) {
+            findViewById<Button>(R.id.btn_plus).text = "+🐝"
+            findViewById<Button>(R.id.btn_minus).text = "-🐺"
+            findViewById<Button>(R.id.btn_multiply).text = "×🐯"
+            findViewById<Button>(R.id.btn_divide).text = "÷🐘"
+            findViewById<Button>(R.id.btn_equals).text = "=🦁"
+            findViewById<Button>(R.id.btn_clear).text = "C🐻"
+            findViewById<Button>(R.id.btn_decimal).text = ".🐭"
+        } else {
+            findViewById<Button>(R.id.btn_plus).text = getString(R.string.plus)
+            findViewById<Button>(R.id.btn_minus).text = getString(R.string.minus)
+            findViewById<Button>(R.id.btn_multiply).text = getString(R.string.multiply)
+            findViewById<Button>(R.id.btn_divide).text = getString(R.string.divide)
+            findViewById<Button>(R.id.btn_equals).text = getString(R.string.equals)
+            findViewById<Button>(R.id.btn_clear).text = getString(R.string.clear)
+            findViewById<Button>(R.id.btn_decimal).text = "."
+        }
     }
     
     private fun speakText(text: String) {
@@ -253,19 +372,32 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     
     private fun applyCurrentTheme() {
         val isLionKing = themeManager.isLionKingTheme()
+        val isAnimal = themeManager.isAnimalTheme()
         
         // Update main layout background
         val mainLayout = findViewById<android.widget.LinearLayout>(R.id.main_layout)
         mainLayout.setBackgroundColor(getColor(
-            if (isLionKing) R.color.lion_king_background else R.color.kid_background
+            when {
+                isAnimal -> R.color.animal_background
+                isLionKing -> R.color.lion_king_background
+                else -> R.color.kid_background
+            }
         ))
         
         // Update display background and text color
         display.setBackgroundColor(getColor(
-            if (isLionKing) R.color.lion_king_surface else R.color.kid_surface
+            when {
+                isAnimal -> R.color.animal_surface
+                isLionKing -> R.color.lion_king_surface
+                else -> R.color.kid_surface
+            }
         ))
         display.setTextColor(getColor(
-            if (isLionKing) R.color.lion_king_on_surface else R.color.kid_on_surface
+            when {
+                isAnimal -> R.color.animal_on_surface
+                isLionKing -> R.color.lion_king_on_surface
+                else -> R.color.kid_on_surface
+            }
         ))
         
         // Update number buttons
@@ -276,10 +408,18 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         numberButtons.forEach { buttonId ->
             val button = findViewById<Button>(buttonId)
             button.backgroundTintList = getColorStateList(
-                if (isLionKing) R.color.lion_king_number_button else R.color.number_button
+                when {
+                    isAnimal -> R.color.animal_number_button
+                    isLionKing -> R.color.lion_king_number_button
+                    else -> R.color.number_button
+                }
             )
             button.setTextColor(getColor(
-                if (isLionKing) R.color.lion_king_on_primary else R.color.kid_on_primary
+                when {
+                    isAnimal -> R.color.animal_on_primary
+                    isLionKing -> R.color.lion_king_on_primary
+                    else -> R.color.kid_on_primary
+                }
             ))
         }
         
@@ -288,46 +428,81 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         operatorButtons.forEach { buttonId ->
             val button = findViewById<Button>(buttonId)
             button.backgroundTintList = getColorStateList(
-                if (isLionKing) R.color.lion_king_operator_button else R.color.operator_button
+                when {
+                    isAnimal -> R.color.animal_operator_button
+                    isLionKing -> R.color.lion_king_operator_button
+                    else -> R.color.operator_button
+                }
             )
             button.setTextColor(getColor(
-                if (isLionKing) R.color.lion_king_on_secondary else R.color.kid_on_secondary
+                when {
+                    isAnimal -> R.color.animal_on_secondary
+                    isLionKing -> R.color.lion_king_on_secondary
+                    else -> R.color.kid_on_secondary
+                }
             ))
         }
         
         // Update equals button
         findViewById<Button>(R.id.btn_equals).apply {
             backgroundTintList = getColorStateList(
-                if (isLionKing) R.color.lion_king_equals_button else R.color.equals_button
+                when {
+                    isAnimal -> R.color.animal_equals_button
+                    isLionKing -> R.color.lion_king_equals_button
+                    else -> R.color.equals_button
+                }
             )
             setTextColor(getColor(
-                if (isLionKing) R.color.lion_king_on_primary else R.color.kid_on_primary
+                when {
+                    isAnimal -> R.color.animal_on_primary
+                    isLionKing -> R.color.lion_king_on_primary
+                    else -> R.color.kid_on_primary
+                }
             ))
         }
         
         // Update clear button
         findViewById<Button>(R.id.btn_clear).apply {
             backgroundTintList = getColorStateList(
-                if (isLionKing) R.color.lion_king_clear_button else R.color.clear_button
+                when {
+                    isAnimal -> R.color.animal_clear_button
+                    isLionKing -> R.color.lion_king_clear_button
+                    else -> R.color.clear_button
+                }
             )
             setTextColor(getColor(
-                if (isLionKing) R.color.lion_king_on_error else R.color.kid_on_error
+                when {
+                    isAnimal -> R.color.animal_on_error
+                    isLionKing -> R.color.lion_king_on_error
+                    else -> R.color.kid_on_error
+                }
             ))
         }
         
         // Update theme button
         findViewById<Button>(R.id.btn_theme).apply {
             backgroundTintList = getColorStateList(
-                if (isLionKing) R.color.lion_king_tertiary else R.color.lion_king_gold
+                when {
+                    isAnimal -> R.color.animal_tertiary
+                    isLionKing -> R.color.lion_king_tertiary
+                    else -> R.color.lion_king_gold
+                }
             )
         }
         
         // Update help button
         findViewById<Button>(R.id.btn_help).apply {
             backgroundTintList = getColorStateList(
-                if (isLionKing) R.color.lion_king_accent else R.color.kid_tertiary
+                when {
+                    isAnimal -> R.color.animal_accent
+                    isLionKing -> R.color.lion_king_accent
+                    else -> R.color.kid_tertiary
+                }
             )
         }
+        
+        // Update button texts with animal emojis
+        updateButtonTexts()
     }
     
     override fun onDestroy() {
