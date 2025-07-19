@@ -61,4 +61,35 @@
     <color name="lion_king_operator_button">#FFD2691E</color>
     <color name="lion_king_equals_button">#FF8FBC8F</color>
     <color name="lion_king_clear_button">#FFA0522D</color>
+    
+    <!-- Animal Theme Colors -->
+    <!-- Nature green backgrounds -->
+    <color name="animal_background">#FFE8F5E8</color>
+    <color name="animal_surface">#FFF1F8E9</color>
+    
+    <!-- Forest green buttons -->
+    <color name="animal_primary">#FF4CAF50</color>
+    <color name="animal_secondary">#FF8BC34A</color>
+    
+    <!-- Earth tone accents -->
+    <color name="animal_accent">#FFFF9800</color>
+    <color name="animal_tertiary">#FF795548</color>
+    
+    <!-- Animal theme specific colors -->
+    <color name="animal_warm_brown">#FF8D6E63</color>
+    <color name="animal_grass_green">#FF66BB6A</color>
+    
+    <!-- Text colors for Animal theme -->
+    <color name="animal_on_primary">#FFFFFFFF</color>
+    <color name="animal_on_secondary">#FFFFFFFF</color>
+    <color name="animal_on_background">#FF2E7D32</color>
+    <color name="animal_on_surface">#FF2E7D32</color>
+    <color name="animal_on_error">#FFFFFFFF</color>
+    <color name="animal_on_tertiary">#FFFFFFFF</color>
+    
+    <!-- Animal button specific colors -->
+    <color name="animal_number_button">#FF66BB6A</color>
+    <color name="animal_operator_button">#FFFF9800</color>
+    <color name="animal_equals_button">#FF4CAF50</color>
+    <color name="animal_clear_button">#FFE57373</color>
 </resources>

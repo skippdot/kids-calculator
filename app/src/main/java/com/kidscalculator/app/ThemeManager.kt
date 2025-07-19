@@ -16,6 +16,7 @@ class ThemeManager(context: Context) {
         private const val KEY_THEME = "selected_theme"
         const val THEME_DEFAULT = "default"
         const val THEME_LION_KING = "lion_king"
+        const val THEME_ANIMAL = "animal"
     }
     
     /**
@@ -35,14 +36,15 @@ class ThemeManager(context: Context) {
     }
     
     /**
-     * Toggle between default and Lion King themes
+     * Toggle between themes in sequence: default -> lion_king -> animal -> default
      */
     fun toggleTheme(): String {
         val currentTheme = getCurrentTheme()
-        val newTheme = if (currentTheme == THEME_DEFAULT) {
-            THEME_LION_KING
-        } else {
-            THEME_DEFAULT
+        val newTheme = when (currentTheme) {
+            THEME_DEFAULT -> THEME_LION_KING
+            THEME_LION_KING -> THEME_ANIMAL
+            THEME_ANIMAL -> THEME_DEFAULT
+            else -> THEME_DEFAULT
         }
         setTheme(newTheme)
         return newTheme
@@ -53,5 +55,12 @@ class ThemeManager(context: Context) {
      */
     fun isLionKingTheme(): Boolean {
         return getCurrentTheme() == THEME_LION_KING
+    }
+    
+    /**
+     * Check if Animal theme is currently active
+     */
+    fun isAnimalTheme(): Boolean {
+        return getCurrentTheme() == THEME_ANIMAL
     }
 }
