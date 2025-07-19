@@ -277,4 +277,39 @@ class MainActivityTest {
         assertNotNull("Help button should exist in landscape", landscapeActivity.findViewById<Button>(R.id.btn_help))
         assertNotNull("Theme button should exist in landscape", landscapeActivity.findViewById<Button>(R.id.btn_theme))
     }
+    
+    @Test
+    fun calculator_state_should_be_preserved_during_orientation_change() {
+        // Enter some numbers and an operation
+        val btn2 = activity.findViewById<Button>(R.id.btn_2)
+        val btn5 = activity.findViewById<Button>(R.id.btn_5)
+        val btnPlus = activity.findViewById<Button>(R.id.btn_plus)
+        val btn3 = activity.findViewById<Button>(R.id.btn_3)
+        
+        btn2.performClick()
+        btn5.performClick()
+        btnPlus.performClick()
+        btn3.performClick()
+        
+        // Verify state before orientation change
+        assertEquals("3", display.text.toString())
+        
+        // Simulate configuration change (orientation change)
+        val bundle = android.os.Bundle()
+        activity.onSaveInstanceState(bundle)
+        
+        // Create new activity instance with saved state (simulating recreation)
+        val newController = Robolectric.buildActivity(MainActivity::class.java)
+        val newActivity = newController.create(bundle).start().resume().visible().get()
+        val newDisplay = newActivity.findViewById<TextView>(R.id.display)
+        
+        // Verify state is preserved
+        assertEquals("3", newDisplay.text.toString())
+        
+        // Verify calculation can continue
+        val newBtnEquals = newActivity.findViewById<Button>(R.id.btn_equals)
+        newBtnEquals.performClick()
+        
+        assertEquals("28", newDisplay.text.toString()) // 25 + 3 = 28
+    }
 }
