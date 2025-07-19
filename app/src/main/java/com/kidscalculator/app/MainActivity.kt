@@ -23,6 +23,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         private const val PREFS_NAME = "KidsCalculatorPrefs"
         private const val KEY_USER_NAME = "user_name"
         private const val MAX_INPUT_LENGTH = 10 // Maximum digits for child-friendly use
+        
+        // Keys for saving calculator state
+        private const val KEY_CURRENT_INPUT = "current_input"
+        private const val KEY_OPERATOR = "operator"
+        private const val KEY_OPERAND1 = "operand1"
+        private const val KEY_IS_NEW_INPUT = "is_new_input"
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +40,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         themeManager = ThemeManager(this)
         calculator = Calculator()
+        
+        // Restore calculator state if available
+        savedInstanceState?.let { state ->
+            calculator.currentInput = state.getString(KEY_CURRENT_INPUT, "0")
+            calculator.operator = state.getString(KEY_OPERATOR, "")
+            calculator.operand1 = state.getDouble(KEY_OPERAND1, 0.0)
+            calculator.isNewInput = state.getBoolean(KEY_IS_NEW_INPUT, true)
+        }
         
         setupButtons()
         applyCurrentTheme()
@@ -511,5 +525,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             tts.stop()
             tts.shutdown()
         }
+    }
+    
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        
+        // Save calculator state to preserve across orientation changes
+        outState.putString(KEY_CURRENT_INPUT, calculator.currentInput)
+        outState.putString(KEY_OPERATOR, calculator.operator)
+        outState.putDouble(KEY_OPERAND1, calculator.operand1)
+        outState.putBoolean(KEY_IS_NEW_INPUT, calculator.isNewInput)
     }
 }
