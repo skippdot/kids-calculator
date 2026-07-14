@@ -11,9 +11,23 @@ class InputValidationTest {
     @Test
     fun max_input_length_constant() {
         // Test that the maximum input length is reasonable for children
-        val maxLength = 10
+        val maxLength = Calculator.MAX_INPUT_LENGTH
         assertTrue("Max input length should be reasonable for kids", maxLength <= 15)
         assertTrue("Max input length should not be too restrictive", maxLength >= 5)
+    }
+
+    @Test
+    fun max_input_length_is_enforced_by_calculator() {
+        val calculator = Calculator()
+        calculator.onNumberPressed("1")
+        repeat(20) {
+            calculator.onNumberPressed("9")
+        }
+
+        assertEquals("Input must be capped at MAX_INPUT_LENGTH digits",
+            Calculator.MAX_INPUT_LENGTH, calculator.currentInput.length)
+        assertEquals("Overflow must be reported for the UI to announce",
+            CalculatorError.NUMBER_TOO_LONG, calculator.lastError)
     }
     
     @Test
@@ -99,27 +113,21 @@ class InputValidationTest {
     
     @Test
     fun division_by_zero_state_reset() {
-        // Test that division by zero properly resets calculator state
-        var currentInput = "10"
-        var operator = "/"
-        var operand1 = 10.0
-        var isNewInput = false
-        
-        // Simulate division by zero handling
-        val operand2 = 0.0
-        if (operand2 == 0.0) {
-            // Reset state as the app should do
-            currentInput = ""
-            operator = ""
-            operand1 = 0.0
-            isNewInput = true
-        }
-        
-        // Verify state is reset
-        assertTrue("Current input should be empty after division by zero", currentInput.isEmpty())
-        assertTrue("Operator should be empty after division by zero", operator.isEmpty())
-        assertEquals("Operand1 should be reset to 0", 0.0, operand1, 0.001)
-        assertTrue("Should be ready for new input", isNewInput)
+        // Division by zero must reset the real calculator and flag the error
+        val calculator = Calculator()
+        calculator.currentInput = "0"
+        calculator.operator = "/"
+        calculator.operand1 = 10.0
+        calculator.isNewInput = false
+
+        calculator.onEqualsPressed()
+
+        assertEquals("Display should reset after division by zero", "0", calculator.currentInput)
+        assertTrue("Operator should be empty after division by zero", calculator.operator.isEmpty())
+        assertEquals("Operand1 should be reset to 0", 0.0, calculator.operand1, 0.001)
+        assertTrue("Should be ready for new input", calculator.isNewInput)
+        assertEquals("Error should be reported for the UI to announce",
+            CalculatorError.DIVISION_BY_ZERO, calculator.lastError)
     }
     
     @Test
