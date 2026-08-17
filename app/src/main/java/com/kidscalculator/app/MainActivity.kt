@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             // Try to set Russian language first for child-friendly experience
-            val russianResult = tts.setLanguage(Locale("ru", "RU"))
+            val russianResult = tts.setLanguage(Locale.forLanguageTag("ru-RU"))
             if (russianResult == TextToSpeech.LANG_MISSING_DATA || russianResult == TextToSpeech.LANG_NOT_SUPPORTED) {
                 // Fallback to default language
                 val defaultResult = tts.setLanguage(Locale.getDefault())
