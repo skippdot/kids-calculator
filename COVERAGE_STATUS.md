@@ -1,53 +1,48 @@
 # Code Coverage Status
 
+Last measured: 2026-07-14 (JaCoCo 0.8.12, JDK 21, JVM test harness)
+
 ## Current Status
-- **Calculator.kt**: 97% coverage (26 tests passing)
-- **Overall Test Suite**: 76 tests passing
-  - CalculatorTest: 26 tests
-  - MainActivityUnitTest: 11 tests  
-  - ThemeManagerTest: 7 tests
-  - ErrorHandlingTest: 9 tests
-  - InputValidationTest: 9 tests
-  - NameStorageTest: 7 tests
-  - StringResourcesTest: 7 tests
 
-## JaCoCo Temporarily Disabled
+**94 unit tests, 0 failures.**
 
-JaCoCo code coverage reporting has been temporarily disabled due to Java 24 compatibility issues.
+| Class | Instructions | Branches | Lines | Methods |
+|---|---|---|---|---|
+| `Calculator.kt` | 98.7% (513/520) | 87.7% (57/65) | **100%** (96/96) | 100% (21/21) |
+| `ThemeManager.kt` | 97.0% (65/67) | 83.3% (5/6) | **100%** (17/17) | 100% (6/6) |
+| `MainActivity.kt` | n/a in JVM harness | – | – | – |
 
-### Issue
-- JaCoCo 0.8.12 (latest stable) does not support Java 24 (class file major version 68)
-- Error: "Unsupported class file major version 68"
-- The build environment is using Java 24 which is newer than JaCoCo supports
+`MainActivity.kt` is exercised by `MainActivityTest.kt` (Robolectric), which
+requires the Android SDK and runs in CI via `./gradlew test`. The remaining
+missed branches in `Calculator.kt` are composite boolean sub-conditions
+(e.g. the `"," / "."` duplicate-separator checks), not untested behavior.
 
-### Workaround
-- Tests continue to run and pass
-- Manual coverage calculation shows 97% coverage for Calculator.kt
-- Coverage badge in README shows estimated 90% overall coverage
+### Test suites
+- CalculatorTest: 39 tests (business logic, error states, formatting, input limit)
+- MainActivityUnitTest: 11 tests
+- ThemeManagerTest: 11 tests (exercises the real `ThemeManager` via mocked `SharedPreferences`)
+- ErrorHandlingTest: 9 tests
+- InputValidationTest: 10 tests
+- NameStorageTest: 7 tests
+- StringResourcesTest: 7 tests
+- MainActivityTest: 12 Robolectric tests (Android SDK required)
 
-### Resolution Path
-Options to re-enable JaCoCo:
-1. Wait for JaCoCo to add Java 24 support
-2. Configure build environment to use Java 17 specifically
-3. Use alternative coverage tools that support Java 24
+## How to measure
 
-### Configuration
-The following has been commented out in app/build.gradle:
-```gradle
-// Temporarily disabled JaCoCo due to Java 24 compatibility issues
-// id 'jacoco'
-// jacoco {
-//     toolVersion = "0.8.12"
-// }
+```bash
+./calculate_coverage.sh
+# or directly:
+./gradlew testDebugUnitTest jacocoTestReport
+# report: app/build/reports/jacoco/jacocoTestReport/html/index.html
 ```
 
-## Actual Coverage Metrics
+JaCoCo is enabled in `app/build.gradle` (toolVersion 0.8.12). The previously
+documented "Java 24 incompatibility" no longer applies on JDK 17–21 builds.
 
-Based on test analysis:
-- **Business Logic**: ~97% covered
-- **UI Components**: Tested via unit tests (MainActivityUnitTest)
-- **Theme Management**: 100% covered
-- **Error Handling**: 100% covered
-- **Input Validation**: 100% covered
+## History
 
-The 90% badge in README is a conservative estimate of overall coverage.
+- Earlier versions of this file estimated coverage by counting test methods
+  with `grep`; the numbers above are measured by JaCoCo instrumentation.
+- Before the ThemeManagerTest rewrite, `ThemeManager.kt` had **0%** measured
+  coverage: the old tests re-implemented the toggle logic locally instead of
+  calling the production class.

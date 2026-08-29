@@ -78,6 +78,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
     reports {
         xml.required = true
         html.required = true
+        csv.required = true
     }
 
     def fileFilter = [

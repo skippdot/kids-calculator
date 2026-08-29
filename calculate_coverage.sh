@@ -1,37 +1,31 @@
 #!/bin/bash
+# Runs the unit tests and prints real JaCoCo coverage per class.
+# Requires a JDK (17+) and the Android SDK (for the Gradle build).
+set -e
 
-# Simple coverage calculation script
-echo "🧮 Calculating Code Coverage..."
+echo "🧮 Running unit tests with JaCoCo coverage..."
+./gradlew testDebugUnitTest jacocoTestReport
 
-# Count Calculator methods and tests
-CALCULATOR_METHODS=$(grep -c "fun " app/src/main/java/com/kidscalculator/app/Calculator.kt)
-CALCULATOR_TESTS=$(grep -c "@Test" app/src/test/java/com/kidscalculator/app/CalculatorTest.kt)
-
-# Count MainActivity methods (excluding lifecycle methods)
-MAINACTIVITY_METHODS=$(grep -c "private fun on" app/src/main/java/com/kidscalculator/app/MainActivity.kt)
-MAINACTIVITY_TESTS=$(grep -c "@Test" app/src/test/java/com/kidscalculator/app/MainActivityTest.kt)
-
-# Calculate coverage
-TOTAL_METHODS=$((CALCULATOR_METHODS + MAINACTIVITY_METHODS))
-TOTAL_TESTS=$((CALCULATOR_TESTS + MAINACTIVITY_TESTS))
-
-echo "📊 Coverage Analysis:"
-echo "Calculator.kt: $CALCULATOR_METHODS methods, $CALCULATOR_TESTS tests (100% coverage)"
-echo "MainActivity.kt: $MAINACTIVITY_METHODS methods, $MAINACTIVITY_TESTS tests (85% coverage)"
-echo "Total: $TOTAL_METHODS methods, $TOTAL_TESTS tests"
-
-# Calculate weighted coverage (Calculator has more complex logic)
-COVERAGE_PERCENTAGE=$(( (CALCULATOR_TESTS * 100 / CALCULATOR_METHODS * 70 + MAINACTIVITY_TESTS * 100 / MAINACTIVITY_METHODS * 30) / 100 ))
-
-echo "📈 Overall Coverage: ${COVERAGE_PERCENTAGE}%"
-
-# Create badge color
-if [ $COVERAGE_PERCENTAGE -ge 80 ]; then
-    COLOR="brightgreen"
-elif [ $COVERAGE_PERCENTAGE -ge 60 ]; then
-    COLOR="yellow"
-else
-    COLOR="red"
+CSV="app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.csv"
+if [ ! -f "$CSV" ]; then
+    echo "❌ Coverage CSV not found at $CSV"
+    exit 1
 fi
 
-echo "🏷️  Badge: coverage-${COVERAGE_PERCENTAGE}%-${COLOR}"
+echo ""
+echo "📊 Coverage by class (instructions / branches / lines):"
+awk -F',' 'NR > 1 {
+    instr_total = $4 + $5; branch_total = $6 + $7; line_total = $8 + $9
+    instr_pct  = instr_total  ? 100 * $5 / instr_total  : 100
+    branch_pct = branch_total ? 100 * $7 / branch_total : 100
+    line_pct   = line_total   ? 100 * $9 / line_total   : 100
+    printf "  %-40s %5.1f%% / %5.1f%% / %5.1f%%\n", $3, instr_pct, branch_pct, line_pct
+    covered += $5; missed += $4
+}
+END {
+    total = covered + missed
+    if (total) printf "\n📈 Overall instruction coverage: %.1f%%\n", 100 * covered / total
+}' "$CSV"
+
+echo ""
+echo "📄 Full HTML report: app/build/reports/jacoco/jacocoTestReport/html/index.html"

@@ -201,8 +201,8 @@ class CalculatorTest {
         
         calculator.onEqualsPressed()
         
-        // Should format as decimal
-        assertEquals("2.50", calculator.currentInput)
+        // Should format as decimal without trailing zeros
+        assertEquals("2.5", calculator.currentInput)
     }
     
     @Test
@@ -346,12 +346,202 @@ class CalculatorTest {
         calculator.operator = "/"
         calculator.operand1 = 0.0
         calculator.isNewInput = false
-        
+
         calculator.onEqualsPressed()
-        
+
         // Should handle NaN result
         assertEquals("0", calculator.currentInput)
         assertEquals("", calculator.operator)
         assertTrue(calculator.isNewInput)
+    }
+
+    // Tests for error reporting (lastError)
+
+    @Test
+    fun division_by_zero_sets_error_state() {
+        calculator.currentInput = "10"
+        calculator.isNewInput = true
+        calculator.onOperatorPressed("/")
+        calculator.currentInput = "0"
+        calculator.isNewInput = false
+
+        calculator.onEqualsPressed()
+
+        assertEquals(CalculatorError.DIVISION_BY_ZERO, calculator.lastError)
+        assertEquals("0", calculator.currentInput)
+    }
+
+    @Test
+    fun division_by_zero_error_set_when_chaining_operators() {
+        calculator.currentInput = "10"
+        calculator.isNewInput = true
+        calculator.onOperatorPressed("/")
+        calculator.currentInput = "0"
+        calculator.isNewInput = false
+
+        calculator.onOperatorPressed("+")
+
+        assertEquals(CalculatorError.DIVISION_BY_ZERO, calculator.lastError)
+        assertEquals("0", calculator.currentInput)
+    }
+
+    @Test
+    fun division_symbol_by_zero_sets_error_state() {
+        // Same as above but with the display symbol "÷"
+        calculator.currentInput = "10"
+        calculator.isNewInput = true
+        calculator.onOperatorPressed("÷")
+        calculator.currentInput = "0"
+        calculator.isNewInput = false
+
+        calculator.onEqualsPressed()
+
+        assertEquals(CalculatorError.DIVISION_BY_ZERO, calculator.lastError)
+    }
+
+    @Test
+    fun invalid_input_sets_error_state() {
+        calculator.currentInput = "invalid"
+        calculator.operator = "+"
+        calculator.operand1 = 5.0
+        calculator.isNewInput = false
+
+        calculator.onEqualsPressed()
+
+        assertEquals(CalculatorError.INVALID_NUMBER, calculator.lastError)
+        assertEquals("0", calculator.currentInput)
+    }
+
+    @Test
+    fun error_is_cleared_by_next_successful_action() {
+        calculator.currentInput = "10"
+        calculator.isNewInput = true
+        calculator.onOperatorPressed("/")
+        calculator.currentInput = "0"
+        calculator.isNewInput = false
+        calculator.onEqualsPressed()
+        assertEquals(CalculatorError.DIVISION_BY_ZERO, calculator.lastError)
+
+        calculator.onNumberPressed("5")
+
+        assertNull(calculator.lastError)
+        assertEquals("5", calculator.currentInput)
+    }
+
+    @Test
+    fun error_is_cleared_by_clear_button() {
+        calculator.currentInput = "10"
+        calculator.isNewInput = true
+        calculator.onOperatorPressed("/")
+        calculator.currentInput = "0"
+        calculator.isNewInput = false
+        calculator.onEqualsPressed()
+        assertEquals(CalculatorError.DIVISION_BY_ZERO, calculator.lastError)
+
+        calculator.onClearPressed()
+
+        assertNull(calculator.lastError)
+    }
+
+    // Tests for input length limit
+
+    @Test
+    fun input_is_limited_to_max_length_digits() {
+        calculator.onNumberPressed("1")
+        repeat(Calculator.MAX_INPUT_LENGTH - 1) {
+            assertTrue(calculator.onNumberPressed("2"))
+        }
+        assertEquals(Calculator.MAX_INPUT_LENGTH, calculator.currentInput.length)
+
+        // The 11th digit must be rejected
+        val accepted = calculator.onNumberPressed("3")
+
+        assertFalse(accepted)
+        assertEquals(CalculatorError.NUMBER_TOO_LONG, calculator.lastError)
+        assertEquals(Calculator.MAX_INPUT_LENGTH, calculator.currentInput.length)
+    }
+
+    @Test
+    fun decimal_point_does_not_count_toward_digit_limit() {
+        calculator.onNumberPressed("1")
+        repeat(Calculator.MAX_INPUT_LENGTH - 2) {
+            calculator.onNumberPressed("2")
+        }
+        calculator.onDecimalPressed()
+
+        // 9 digits + "." so far; one more digit is still allowed
+        assertTrue(calculator.onNumberPressed("5"))
+        assertFalse(calculator.onNumberPressed("6"))
+    }
+
+    // Tests for result formatting and overflow
+
+    @Test
+    fun result_trailing_zeros_are_trimmed() {
+        // 10 / 4 = 2.50 -> displayed as 2.5
+        calculator.currentInput = "10"
+        calculator.isNewInput = true
+        calculator.onOperatorPressed("/")
+        calculator.currentInput = "4"
+        calculator.isNewInput = false
+
+        calculator.onEqualsPressed()
+
+        assertEquals("2.5", calculator.currentInput)
+    }
+
+    @Test
+    fun result_keeps_two_meaningful_decimals() {
+        // 1 / 4 = 0.25 -> both decimals kept
+        calculator.currentInput = "1"
+        calculator.isNewInput = true
+        calculator.onOperatorPressed("/")
+        calculator.currentInput = "4"
+        calculator.isNewInput = false
+
+        calculator.onEqualsPressed()
+
+        assertEquals("0.25", calculator.currentInput)
+    }
+
+    @Test
+    fun result_too_large_for_display_sets_error() {
+        calculator.currentInput = "9999999999"
+        calculator.isNewInput = true
+        calculator.onOperatorPressed("*")
+        calculator.currentInput = "9999999999"
+        calculator.isNewInput = false
+
+        calculator.onEqualsPressed()
+
+        assertEquals(CalculatorError.NUMBER_TOO_LONG, calculator.lastError)
+        assertEquals("0", calculator.currentInput)
+    }
+
+    @Test
+    fun unknown_operator_sets_invalid_number_error() {
+        calculator.currentInput = "3"
+        calculator.operator = "%"
+        calculator.operand1 = 5.0
+        calculator.isNewInput = false
+
+        calculator.onEqualsPressed()
+
+        assertEquals(CalculatorError.INVALID_NUMBER, calculator.lastError)
+        assertEquals("0", calculator.currentInput)
+    }
+
+    @Test
+    fun negative_results_are_supported() {
+        calculator.currentInput = "3"
+        calculator.isNewInput = true
+        calculator.onOperatorPressed("-")
+        calculator.currentInput = "5"
+        calculator.isNewInput = false
+
+        calculator.onEqualsPressed()
+
+        assertEquals("-2", calculator.currentInput)
+        assertNull(calculator.lastError)
     }
 }

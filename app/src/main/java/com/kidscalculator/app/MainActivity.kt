@@ -11,6 +11,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
+/** Wiring for one operator button: view id, operator symbol, and TTS strings per theme. */
+private data class OperatorButton(
+    val buttonId: Int,
+    val op: String,
+    val ttsRes: Int,
+    val animalTtsRes: Int
+)
+
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     
     private lateinit var display: TextView
@@ -22,7 +30,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     companion object {
         private const val PREFS_NAME = "KidsCalculatorPrefs"
         private const val KEY_USER_NAME = "user_name"
-        private const val MAX_INPUT_LENGTH = 10 // Maximum digits for child-friendly use
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,12 +89,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     R.id.btn_9 -> "9"
                     else -> index.toString()
                 }
-                onNumberPressed(number)
-                
-                // Speak number or animal sound based on theme
-                if (themeManager.isAnimalTheme()) {
-                    val animalSound = getAnimalSoundForNumber(number)
-                    speakText(animalSound)
+                val accepted = onNumberPressed(number)
+
+                if (!accepted) {
+                    // Number is already at the maximum length
+                    speakText(getString(R.string.tts_number_too_long))
+                } else if (themeManager.isAnimalTheme()) {
+                    // Speak number or animal sound based on theme
+                    speakText(getAnimalSoundForNumber(number))
                 } else {
                     speakText(number)
                 }
@@ -95,39 +104,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         
         // Operator buttons
-        findViewById<Button>(R.id.btn_plus).setOnClickListener {
-            onOperatorPressed("+")
-            if (themeManager.isAnimalTheme()) {
-                speakText(getString(R.string.tts_animal_plus))
-            } else {
-                speakText(getString(R.string.tts_plus))
-            }
-        }
-        
-        findViewById<Button>(R.id.btn_minus).setOnClickListener {
-            onOperatorPressed("-")
-            if (themeManager.isAnimalTheme()) {
-                speakText(getString(R.string.tts_animal_minus))
-            } else {
-                speakText(getString(R.string.tts_minus))
-            }
-        }
-        
-        findViewById<Button>(R.id.btn_multiply).setOnClickListener {
-            onOperatorPressed("*")
-            if (themeManager.isAnimalTheme()) {
-                speakText(getString(R.string.tts_animal_multiply))
-            } else {
-                speakText(getString(R.string.tts_multiply))
-            }
-        }
-        
-        findViewById<Button>(R.id.btn_divide).setOnClickListener {
-            onOperatorPressed("/")
-            if (themeManager.isAnimalTheme()) {
-                speakText(getString(R.string.tts_animal_divide))
-            } else {
-                speakText(getString(R.string.tts_divide))
+        val operatorButtons = listOf(
+            OperatorButton(R.id.btn_plus, "+", R.string.tts_plus, R.string.tts_animal_plus),
+            OperatorButton(R.id.btn_minus, "-", R.string.tts_minus, R.string.tts_animal_minus),
+            OperatorButton(R.id.btn_multiply, "*", R.string.tts_multiply, R.string.tts_animal_multiply),
+            OperatorButton(R.id.btn_divide, "/", R.string.tts_divide, R.string.tts_animal_divide)
+        )
+        operatorButtons.forEach { config ->
+            findViewById<Button>(config.buttonId).setOnClickListener {
+                onOperatorPressed(config.op)
+                if (!speakErrorIfAny()) {
+                    val ttsRes = if (themeManager.isAnimalTheme()) config.animalTtsRes else config.ttsRes
+                    speakText(getString(ttsRes))
+                }
             }
         }
         
@@ -170,9 +159,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
     
-    private fun onNumberPressed(number: String) {
-        calculator.onNumberPressed(number)
+    private fun onNumberPressed(number: String): Boolean {
+        val accepted = calculator.onNumberPressed(number)
         updateDisplay()
+        return accepted
     }
     
     private fun onDecimalPressed() {
@@ -188,18 +178,33 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun onEqualsPressed() {
         calculator.onEqualsPressed()
         updateDisplay()
-        
+
+        if (speakErrorIfAny()) {
+            return
+        }
+
         // Speak the result
         val result = calculator.currentInput
-        if (result.isNotEmpty() && result != "Error") {
-            if (themeManager.isAnimalTheme()) {
-                speakText("${getString(R.string.tts_animal_equals)} $result")
-            } else {
-                speakText("${getString(R.string.tts_equals)} $result")
-            }
+        if (themeManager.isAnimalTheme()) {
+            speakText("${getString(R.string.tts_animal_equals)} $result")
         } else {
-            speakText(getString(R.string.tts_error))
+            speakText("${getString(R.string.tts_equals)} $result")
         }
+    }
+
+    /**
+     * Speaks a child-friendly message for the calculator's last error.
+     * @return true if there was an error to announce.
+     */
+    private fun speakErrorIfAny(): Boolean {
+        val message = when (calculator.lastError) {
+            CalculatorError.DIVISION_BY_ZERO -> getString(R.string.tts_division_by_zero)
+            CalculatorError.NUMBER_TOO_LONG -> getString(R.string.tts_number_too_long)
+            CalculatorError.INVALID_NUMBER -> getString(R.string.tts_error)
+            null -> return false
+        }
+        speakText(message)
+        return true
     }
     
     private fun onClearPressed() {
@@ -239,7 +244,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             "6" -> "🐔"
             "7" -> "🐑"
             "8" -> "🦆"
-            "9" -> "🦆"
+            "9" -> "🐓"
             else -> ""
         }
     }
@@ -365,7 +370,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
     
     private fun onThemeButtonClick() {
-        val newTheme = themeManager.toggleTheme()
+        themeManager.toggleTheme()
         applyCurrentTheme()
         speakText(getString(R.string.tts_theme_switched))
     }

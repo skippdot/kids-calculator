@@ -1,7 +1,7 @@
 # Kids Calculator 🧮
 
 ![Build Status](https://github.com/skippdot/kids-calculator/workflows/Android%20Build/badge.svg)
-![Coverage](https://img.shields.io/badge/coverage-97%25-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen)
 
 A simple, child-friendly calculator app for Android designed specifically for 4-year-olds. The app features large buttons, colorful design, and text-to-speech functionality to help children learn numbers and basic math operations.
 

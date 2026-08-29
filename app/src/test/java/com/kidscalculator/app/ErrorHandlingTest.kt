@@ -119,26 +119,27 @@ class ErrorHandlingTest {
     
     @Test
     fun display_formatting_edge_cases() {
-        // Test display formatting for various number types
+        // Drive the real Calculator: "0 + x =" displays the formatted x
         val testNumbers = listOf(
-            0.0 to "0",
-            1.0 to "1", 
-            1.5 to "1.50",
-            -1.0 to "-1",
-            -1.5 to "-1.50",
-            999999999.0 to "999999999",
-            0.001 to "0.00"
+            "0" to "0",
+            "1" to "1",
+            "1.5" to "1.5",
+            "-1.5" to "-1.5",
+            "999999999" to "999999999",
+            "0.001" to "0" // rounded to two decimals for kid-friendly display
         )
-        
-        for ((number, expectedFormat) in testNumbers) {
-            val formatted = if (number == number.toInt().toDouble()) {
-                number.toInt().toString()
-            } else {
-                String.format("%.2f", number)
-            }
-            
-            assertEquals("Number $number should format to '$expectedFormat'", 
-                expectedFormat, formatted)
+
+        for ((input, expectedFormat) in testNumbers) {
+            val calculator = Calculator()
+            calculator.currentInput = "0"
+            calculator.isNewInput = true
+            calculator.onOperatorPressed("+")
+            calculator.currentInput = input
+            calculator.isNewInput = false
+            calculator.onEqualsPressed()
+
+            assertEquals("Number $input should display as '$expectedFormat'",
+                expectedFormat, calculator.currentInput)
         }
     }
     
